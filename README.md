@@ -1,0 +1,3 @@
+# Minder
+
+Small college project
