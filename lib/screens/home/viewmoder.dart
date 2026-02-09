@@ -1,50 +1,99 @@
-import 'dart:math';
-
+import 'package:client/services/color.dart';
 import 'package:flutter/material.dart';
+
+import '../../api_modules/note.dart/note.dart';
 
 class HomeViewModel with ChangeNotifier {
   final List<Note> _notesMoc = [
-    Note(1, "header1", "foo sazadfasdfasdf infasdj;flkasjd f;ao"),
-    Note(2, "header2", "foo sazadfasdff info"),
-    Note(3, "header3", "foo sazadfasdfasdf info"),
-    Note(4, "header4", "foo  info"),
-    Note(5, "header5", "foo bar baz qwerty additionl info"),
-    Note(6, "header6", "foo bar a;lskdjf;alksjd;flkkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info"),
-    Note(7, "header7", "foo bar a;lskdjf;alksjd;flkajsd;flkjas;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info"),
-    Note(8, "header8", "foo bar a;lskdjf;alksjd;flk;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info"),
-    Note(9, "header9", "foo bar a;lskdjf;alksjd;flka;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info"),
-    Note(10, "header10", "foo bar a;lskdjf;alksjd;flka;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info"),
-    Note(11, "header11", "foo bar a;lskdjf;alksjd;flkaa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info"),
-    Note(12, "header12", "foo bar a;lskdjf;alksjd;flkaa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty and some additional info"),
-    Note(13, "header13", "foo bar a;lskdjf;alksjd;flkldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty and some additional info"),
-    Note(14, "header14", "foo bar a;lskdjf;alksjd;flkaa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty and some additional info"),
-    Note(15, "header15", "foo bar a;lskdjf;alksjd;flka;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty and some additional info"),
-    Note(16, "header16", "foo bar a;lskdjf;alksjd;flka;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty and some additional info"),
-    Note(17, "header", "foo bar baz qwerty and some  info"),
-    Note(18, "header", "foo bar baz qwerty and some  info"),
-    Note(19, "header", "foo bar baz qwerty and some  info"),
-    Note(20, "header", "foo bar baz qwerty and some  info"),
-    Note(21, "header", "foo bar baz qwerty and some additional info"),
+    Note(id: 1, title: "header1", content: "foo sazadfasdfasdf infasdj;flkasjd f;ao", color: ColorService.getRandomPastelColor()),
+    Note(id: 2, title: "header2", content: "foo sazadfasdff info", color: ColorService.getRandomPastelColor()),
+    Note(id: 3, title: "header3", content: "foo sazadfasdfasdf info", color: ColorService.getRandomPastelColor()),
+    Note(id: 4, title: "header4", content: "foo  info", color: ColorService.getRandomPastelColor()),
+    Note(id: 5, title: "header5", content: "foo bar baz qwerty additionl info", color: ColorService.getRandomPastelColor()),
+    Note(
+      id: 6,
+      title: "header6",
+      content: "foo bar a;lskdjf;alksjd;flkkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info",
+      color: ColorService.getRandomPastelColor(),
+    ),
+    Note(
+      id: 7,
+      title: "header7",
+      content: "foo bar a;lskdjf;alksjd;flkajsd;flkjas;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info",
+      color: ColorService.getRandomPastelColor(),
+    ),
+    Note(
+      id: 8,
+      title: "header8",
+      content: "foo bar a;lskdjf;alksjd;flk;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info",
+      color: ColorService.getRandomPastelColor(),
+    ),
+    Note(
+      id: 9,
+      title: "header9",
+      content: "foo bar a;lskdjf;alksjd;flka;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info",
+      color: ColorService.getRandomPastelColor(),
+    ),
+    Note(
+      id: 10,
+      title: "header10",
+      content: "foo bar a;lskdjf;alksjd;flka;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info",
+      color: ColorService.getRandomPastelColor(),
+    ),
+    Note(
+      id: 11,
+      title: "header11",
+      content: "foo bar a;lskdjf;alksjd;flkaa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty additional info",
+      color: ColorService.getRandomPastelColor(),
+    ),
+    Note(
+      id: 12,
+      title: "header12",
+      content: "foo bar a;lskdjf;alksjd;flkaa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty and some additional info",
+      color: ColorService.getRandomPastelColor(),
+    ),
+    Note(
+      id: 13,
+      title: "header13",
+      content: "foo bar a;lskdjf;alksjd;flkldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty and some additional info",
+      color: ColorService.getRandomPastelColor(),
+    ),
+    Note(
+      id: 14,
+      title: "header14",
+      content: "foo bar a;lskdjf;alksjd;flkaa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty and some additional info",
+      color: ColorService.getRandomPastelColor(),
+    ),
+    Note(
+      id: 15,
+      title: "header15",
+      content: "foo bar a;lskdjf;alksjd;flka;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty and some additional info",
+      color: ColorService.getRandomPastelColor(),
+    ),
+    Note(
+      id: 16,
+      title: "header16",
+      content: "foo bar a;lskdjf;alksjd;flka;ldkjfa;sldkjfa;slkdjffa;lskdjf;alksfj;lsdkjfa;l baz qwerty and some additional info",
+      color: ColorService.getRandomPastelColor(),
+    ),
+    Note(id: 17, title: "header", content: "foo bar baz qwerty and some  info", color: ColorService.getRandomPastelColor()),
+    Note(id: 18, title: "header", content: "foo bar baz qwerty and some  info", color: ColorService.getRandomPastelColor()),
+    Note(id: 19, title: "header", content: "foo bar baz qwerty and some  info", color: ColorService.getRandomPastelColor()),
+    Note(id: 20, title: "header", content: "foo bar baz qwerty and some  info", color: ColorService.getRandomPastelColor()),
+    Note(id: 21, title: "header", content: "foo bar baz qwerty and some additional info", color: ColorService.getRandomPastelColor()),
   ];
 
   List<Note> get notes => _notesMoc;
 
-  void setNoteColor({required int noteOrder, required Color newColor}) {
-    _notesMoc[noteOrder].color = newColor;
+  void changeColor({required Color newColor, required Note note}) {
+    final _note = _notesMoc.firstWhere((n) => n.id == note.id);
+    //_notesMoc[_note.id].color = newColor;
+    _note.color = newColor;
+    notifyListeners();
   }
 
   Future<void> delNote({required Note note}) async {
     _notesMoc.remove(note);
     notifyListeners();
   }
-}
-
-class Note {
-  int id;
-  String title;
-  String content;
-  Color? color;
-  bool isNotify;
-
-  Note(this.id, this.title, this.content) : isNotify = Random().nextBool();
 }

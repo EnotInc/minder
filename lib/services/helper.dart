@@ -2,7 +2,7 @@ import 'package:client/services/context.dart';
 import 'package:flutter/material.dart';
 
 class HelperService {
-  static void alertDialog({required Widget title, required Widget content, required List<Widget> buttons}) {
+  static void alertDialog({Widget? title, required Widget content, required List<Widget> buttons}) {
     if (ContextService.key.currentContext == null) return;
 
     showDialog(

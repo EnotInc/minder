@@ -1,10 +1,11 @@
-import 'dart:math';
-
 import 'package:client/screens/home/viewmoder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
+import '../../api_modules/note.dart/note.dart';
+import '../../services/helper.dart';
 import '../../services/theme.dart';
 
 class HomeView extends StatefulWidget {
@@ -46,12 +47,15 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/note_edit', arguments: {'note': null});
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 }
-
-final List<Color> _noteColors = [Color(0xffffffff), Color(0xfff28b81), Color(0xfffbf476), Color(0xffcdff90), Color(0xffa7feeb), Color(0xffcbf0f8), Color(0xffafcbfa)];
 
 class NoteCard extends StatefulWidget {
   final Note note;
@@ -63,18 +67,6 @@ class NoteCard extends StatefulWidget {
 }
 
 class _NoteCardState extends State<NoteCard> {
-  static Color _getRandomPastelColor() {
-    return _noteColors[Random().nextInt(_noteColors.length)];
-  }
-
-  //late HomeViewModel viewModel;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.note.color = _getRandomPastelColor();
-  }
-
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeViewModel>();
@@ -101,11 +93,11 @@ class _NoteCardState extends State<NoteCard> {
             ],
           ),
         ),
-        onLongPress: () {
+        onTap: () {
+          Color changedColor = widget.note.color!;
           showModalBottomSheet(
             useSafeArea: true,
             context: context,
-            //context: ContextService.key.currentContext!,
             backgroundColor: Colors.transparent,
             builder: (context) {
               final arr = [
@@ -114,9 +106,14 @@ class _NoteCardState extends State<NoteCard> {
                   automaticallyImplyLeading: false,
                   backgroundColor: Colors.transparent,
                 ),
-                Container(height: 2, color: widget.note.color),
+                Container(height: 2, color: changedColor),
                 ListTile(
-                  title: TextButton(onPressed: () {}, child: Text("Изменить")),
+                  title: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).popAndPushNamed('/note_edit', arguments: {'note': widget.note});
+                    },
+                    child: Text("Изменить"),
+                  ),
                 ),
                 ListTile(
                   title: TextButton(
@@ -129,10 +126,40 @@ class _NoteCardState extends State<NoteCard> {
                     child: Text("Удалить"),
                   ),
                 ),
-                Row(
-                  children: List.generate(_noteColors.length, (index) {
-                    return Icon(Icons.circle, color: _noteColors[index]);
-                  }),
+                ListTile(
+                  title: TextButton(
+                    onPressed: () {
+                      //Navigator.pop(context);
+                      HelperService.alertDialog(
+                        title: Text("Choose a color"),
+                        content: SingleChildScrollView(
+                          child: ColorPicker(
+                            pickerColor: changedColor,
+                            onColorChanged: (color) {
+                              changedColor = color;
+                            },
+                          ),
+                        ),
+                        buttons: [
+                          TextButton(
+                            onPressed: () {
+                              viewModel.changeColor(newColor: changedColor, note: widget.note);
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Ok"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Cancel"),
+                          ),
+                        ],
+                      );
+                    },
+                    child: Text("Выбрать цвет"),
+                  ),
                 ),
               ];
               return SafeArea(
@@ -142,7 +169,7 @@ class _NoteCardState extends State<NoteCard> {
                     decoration: BoxDecoration(
                       color: ThemeService.mainBackground,
                       borderRadius: BorderRadius.circular(8),
-                      border: BoxBorder.all(color: widget.note.color!),
+                      border: BoxBorder.all(color: changedColor),
                     ),
                     child: Wrap(children: arr),
                   ),
