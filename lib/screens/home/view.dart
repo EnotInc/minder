@@ -143,9 +143,8 @@ class _NoteCardState extends State<NoteCard> {
                         buttons: [
                           TextButton(
                             onPressed: () {
+                              Navigator.of(context).popUntil((route) => route.isFirst);
                               viewModel.changeColor(newColor: changedColor, note: widget.note);
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
                             },
                             child: Text("Ok"),
                           ),

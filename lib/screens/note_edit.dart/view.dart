@@ -12,7 +12,7 @@ import 'viewmoder.dart';
 class NoteEditview extends StatefulWidget {
   NoteEditview({super.key, this.note});
 
-  Note? note;
+  late Note? note;
 
   @override
   State<NoteEditview> createState() => _NoteEditviewState();

@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 
 class ThemeService {
   static const Color mainBackground = Color(0xff2d2d2d);
-  static const Color noteBorderColor = Colors.cyan;
+  static const Color authColor = Color(0xff1f1f1f);
 
   static ThemeData defaultTheme = ThemeData(
-    splashColor: Colors.black,
-    highlightColor: Colors.black,
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: const Color(0xff2d2d2d),
     useMaterial3: true,
 
-    appBarTheme: AppBarThemeData(backgroundColor: mainBackground, centerTitle: true, scrolledUnderElevation: 0.0),
+    appBarTheme: const AppBarThemeData(backgroundColor: mainBackground, centerTitle: true, scrolledUnderElevation: 0.0),
+
+    textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.white),
 
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: mainBackground,

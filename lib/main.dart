@@ -12,6 +12,6 @@ class Minder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Minder', navigatorKey: ContextService.key, routes: routes, initialRoute: '/home', theme: ThemeService.defaultTheme);
+    return MaterialApp(title: 'Minder', navigatorKey: ContextService.key, routes: routes, initialRoute: '/login', theme: ThemeService.defaultTheme);
   }
 }

@@ -12,6 +12,7 @@ class ApiService {
   Future<dynamic> get({required String path}) async {
     try {
       final responce = await dio.get(path, options: Options(headers: {'Authorization': 'Bearer $token'}));
+      //TODO: add responce.statusCode check
       return responce.data;
     } catch (error) {
       _somethingWentWrong();
@@ -25,6 +26,7 @@ class ApiService {
         data: body,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
+      //TODO: add responce.statusCode check
       return responce.data;
     } catch (error) {
       _somethingWentWrong();
