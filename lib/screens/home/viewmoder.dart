@@ -2,6 +2,8 @@ import 'package:client/services/color.dart';
 import 'package:flutter/material.dart';
 
 import '../../api_modules/note.dart/note.dart';
+import '../../services/context.dart';
+import '../../services/helper.dart';
 
 class HomeViewModel with ChangeNotifier {
   final List<Note> _notesMoc = [
@@ -92,7 +94,29 @@ class HomeViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> delNote({required Note note}) async {
+  void askAboutDelete({required Note note}) {
+    HelperService.alertDialog(
+      title: Text("Информация"),
+      content: Text("Вы уверены что хотите удалить заметку '${note.title}'?"),
+      buttons: [
+        TextButton(
+          onPressed: () async {
+            await deleteNote(note: note);
+            Navigator.of(ContextService.key.currentContext!).popUntil((route) => route.settings.name == '/home');
+          },
+          child: Text("Да"),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(ContextService.key.currentContext!).pop();
+          },
+          child: Text("Нет"),
+        ),
+      ],
+    );
+  }
+
+  Future<void> deleteNote({required Note note}) async {
     _notesMoc.remove(note);
     notifyListeners();
   }

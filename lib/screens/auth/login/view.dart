@@ -13,6 +13,11 @@ class _LoginViewState extends State<LoginView> {
   final password = TextEditingController();
   final _key = GlobalKey<FormState>();
 
+  final loginLen = 6;
+  final passwordLen = 6;
+
+  bool _obscure = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +46,7 @@ class _LoginViewState extends State<LoginView> {
                           validator: (value) {
                             final v = value?.trim() ?? '';
                             if (v.isEmpty) return 'Enter login or email';
+                            if (v.length < loginLen) return 'Login must me bigger than $loginLen symbols';
                             return null;
                           },
                         ),
@@ -49,10 +55,22 @@ class _LoginViewState extends State<LoginView> {
                           controller: password,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(labelText: 'password'),
+                          obscureText: _obscure,
+                          decoration: InputDecoration(
+                            labelText: 'password',
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscure = !_obscure;
+                                });
+                              },
+                              icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
+                            ),
+                          ),
                           validator: (value) {
                             final v = value?.trim() ?? '';
                             if (v.isEmpty) return 'Enter password';
+                            if (v.length < passwordLen) return 'Password must be bigger than $passwordLen symbols';
                             return null;
                           },
                         ),

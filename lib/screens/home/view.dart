@@ -1,4 +1,5 @@
 import 'package:client/screens/home/viewmoder.dart';
+import 'package:client/services/date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -34,7 +35,16 @@ class _HomeViewState extends State<HomeView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: SearchBar(hintText: "foobarbaz"),
+        leading: Icon(null),
+        title: SearchBar(hintText: "foobarbaz", autoFocus: false),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/profile');
+            },
+            icon: Icon(Icons.person),
+          ),
+        ],
         backgroundColor: Colors.transparent,
       ),
       body: SafeArea(
@@ -86,7 +96,19 @@ class _NoteCardState extends State<NoteCard> {
               AppBar(
                 centerTitle: true,
                 title: Text(widget.note.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                actions: [widget.note.isNotify ? IconButton(onPressed: () {}, icon: Icon(Icons.notifications_active_outlined)) : SizedBox()],
+                actions: [
+                  widget.note.isNotify
+                      ? IconButton(
+                          onPressed: () async {
+                            HelperService.alertDialog(
+                              content: DateService.dateSeting(note: widget.note),
+                              color: Colors.transparent,
+                            );
+                          },
+                          icon: Icon(Icons.notifications_active_outlined),
+                        )
+                      : SizedBox(),
+                ],
               ),
               const SizedBox(height: 8),
               Text(widget.note.content, overflow: TextOverflow.ellipsis, maxLines: 10, style: TextStyle(fontSize: 16)),
@@ -118,10 +140,7 @@ class _NoteCardState extends State<NoteCard> {
                 ListTile(
                   title: TextButton(
                     onPressed: () async {
-                      await viewModel.delNote(note: widget.note);
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                      }
+                      viewModel.askAboutDelete(note: widget.note);
                     },
                     child: Text("Удалить"),
                   ),
@@ -129,7 +148,6 @@ class _NoteCardState extends State<NoteCard> {
                 ListTile(
                   title: TextButton(
                     onPressed: () {
-                      //Navigator.pop(context);
                       HelperService.alertDialog(
                         title: Text("Choose a color"),
                         content: SingleChildScrollView(

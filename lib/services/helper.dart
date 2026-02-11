@@ -2,7 +2,7 @@ import 'package:client/services/context.dart';
 import 'package:flutter/material.dart';
 
 class HelperService {
-  static void alertDialog({Widget? title, required Widget content, required List<Widget> buttons}) {
+  static void alertDialog({Widget? title, Widget? content, List<Widget>? buttons, Color? color}) {
     if (ContextService.key.currentContext == null) return;
 
     showDialog(
@@ -10,7 +10,7 @@ class HelperService {
       builder: (BuildContext context) {
         return PopScope(
           canPop: false,
-          child: AlertDialog(title: title, content: content, actions: buttons),
+          child: AlertDialog(title: title, content: content, actions: buttons, backgroundColor: color),
         );
       },
     );

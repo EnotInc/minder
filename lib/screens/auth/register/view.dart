@@ -14,6 +14,12 @@ class _RegisterViewState extends State<RegisterView> {
   final repeat = TextEditingController();
   final _key = GlobalKey<FormState>();
 
+  final loginLen = 6;
+  final passwordLen = 6;
+
+  bool _obscure = true;
+  bool _obscureRepeat = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +48,7 @@ class _RegisterViewState extends State<RegisterView> {
                           validator: (value) {
                             final v = value?.trim() ?? '';
                             if (v.isEmpty) return 'Enter login or email';
+                            if (v.length < loginLen) return 'Login must be bigger than $loginLen symbols';
                             return null;
                           },
                         ),
@@ -50,10 +57,22 @@ class _RegisterViewState extends State<RegisterView> {
                           controller: password,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(labelText: 'password'),
+                          decoration: InputDecoration(
+                            labelText: 'password',
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscure = !_obscure;
+                                });
+                              },
+                              icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
+                            ),
+                          ),
+                          obscureText: _obscure,
                           validator: (value) {
                             final v = value?.trim() ?? '';
                             if (v.isEmpty) return 'Enter password';
+                            if (v.length < passwordLen) return 'Password must be bigger than $passwordLen symbols';
                             return null;
                           },
                         ),
@@ -62,10 +81,23 @@ class _RegisterViewState extends State<RegisterView> {
                           controller: repeat,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(labelText: 'repeat'),
+                          obscureText: _obscureRepeat,
+                          decoration: InputDecoration(
+                            labelText: 'repeat',
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscureRepeat = !_obscureRepeat;
+                                });
+                              },
+                              icon: Icon(_obscureRepeat ? Icons.visibility : Icons.visibility_off),
+                            ),
+                          ),
                           validator: (value) {
                             final v = value?.trim() ?? '';
                             if (v.isEmpty) return 'Enter password';
+                            if (v.length < passwordLen) return 'Password must be bigger than $passwordLen symbols';
+                            if (password.text != repeat.text) return 'Passwords must be the same';
                             return null;
                           },
                         ),

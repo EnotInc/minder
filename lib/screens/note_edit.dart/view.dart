@@ -1,3 +1,4 @@
+import 'package:client/services/date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
@@ -23,21 +24,21 @@ class _NoteEditviewState extends State<NoteEditview> {
   final content = TextEditingController();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
+    final viewModel = context.read<NoteEditViewModel>();
 
     if (widget.note == null) {
-      widget.note = Note(id: 1, title: "", content: "", color: ColorService.getRandomPastelColor());
+      widget.note = Note(id: -1, title: "", content: "", color: ColorService.getRandomPastelColor());
     }
 
-    final viewModel = context.watch<NoteEditViewModel>();
     viewModel.note = widget.note!;
+    viewModel.isNew = true;
   }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<NoteEditViewModel>();
-    Color changedColor = viewModel.note!.color!;
 
     if (header.text != viewModel.note!.title) {
       header.text = viewModel.note!.title;
@@ -48,17 +49,41 @@ class _NoteEditviewState extends State<NoteEditview> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            if (header.text.isNotEmpty || content.text.isNotEmpty) {
+              viewModel.askAboutGoBack();
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         iconTheme: IconThemeData(size: 32.0),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.delete_forever_outlined)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.notifications_active_outlined)),
           IconButton(
             onPressed: () {
+              viewModel.askAboutDelete();
+            },
+            icon: Icon(Icons.delete_forever_outlined),
+          ),
+          IconButton(
+            onPressed: () {
+              HelperService.alertDialog(
+                content: DateService.dateSeting(note: viewModel.note!),
+                color: Colors.transparent,
+              );
+            },
+            icon: Icon(Icons.edit_notifications_outlined),
+          ),
+          IconButton(
+            onPressed: () {
+              Color changedColor = viewModel.note!.color!;
               HelperService.alertDialog(
                 title: Text("Choose a color"),
                 content: SingleChildScrollView(
                   child: ColorPicker(
-                    pickerColor: viewModel.note!.color!,
+                    pickerColor: changedColor,
                     onColorChanged: (color) {
                       changedColor = color;
                     },
@@ -67,8 +92,8 @@ class _NoteEditviewState extends State<NoteEditview> {
                 buttons: [
                   TextButton(
                     onPressed: () {
-                      viewModel.changeColor(newColor: changedColor);
                       Navigator.of(context).pop();
+                      viewModel.changeColor(newColor: changedColor);
                     },
                     child: Text("Ok"),
                   ),
@@ -106,6 +131,9 @@ class _NoteEditviewState extends State<NoteEditview> {
                       style: TextStyle(fontSize: 32),
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(hintText: "So, what's up...", border: InputBorder.none),
+                      onChanged: (value) {
+                        viewModel.note!.title = header.text;
+                      },
                     ),
                   ),
                 ),
@@ -118,6 +146,9 @@ class _NoteEditviewState extends State<NoteEditview> {
                       style: TextStyle(fontSize: 20),
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(hintText: "tell me more", border: InputBorder.none, contentPadding: EdgeInsets.all(8)),
+                      onChanged: (value) {
+                        viewModel.note!.content = content.text;
+                      },
                     ),
                   ),
                 ),
@@ -127,8 +158,11 @@ class _NoteEditviewState extends State<NoteEditview> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pop();
+        onPressed: () async {
+          await viewModel.completeNote();
+          if (context.mounted) {
+            Navigator.of(context).pop();
+          }
         },
         child: Icon(Icons.check),
       ),
