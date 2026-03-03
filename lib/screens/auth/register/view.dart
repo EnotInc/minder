@@ -22,13 +22,15 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
           padding: EdgeInsetsGeometry.all(16),
           child: Column(
             children: [
-              Expanded(child: SizedBox()),
+              //Expanded(child: SizedBox()),
+              Center(child: Image.asset('assets/MinderLogoV4.png', width: 256, height: 256)),
+              //Expanded(child: SizedBox()),
               Form(
                 key: _key,
                 child: Card(
@@ -112,7 +114,8 @@ class _RegisterViewState extends State<RegisterView> {
                   Text("Already have an account?"),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).popAndPushNamed('/login');
+                      // Navigator.of(context).popAndPushNamed('/login');
+                      Navigator.pushReplacementNamed(context, '/login');
                     },
                     child: Text(
                       "Login right now!",
@@ -122,21 +125,24 @@ class _RegisterViewState extends State<RegisterView> {
                 ],
               ),
               Expanded(child: SizedBox()),
-              SizedBox(
-                width: double.infinity,
-                child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(32), color: ThemeService.authColor),
-                  child: TextButton(
-                    onPressed: () {
-                      if (_key.currentState!.validate()) {
-                        Navigator.of(context).popAndPushNamed('/home');
-                      }
-                    },
-                    child: Text('Регистрация'),
-                  ),
-                ),
-              ),
             ],
+          ),
+        ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsetsGeometry.symmetric(vertical: 8, horizontal: 0),
+          child: SizedBox(
+            width: double.infinity,
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(32), color: ThemeService.authColor),
+              child: TextButton(
+                onPressed: () {
+                  if (_key.currentState!.validate()) {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  }
+                },
+                child: Text('Регистрация'),
+              ),
+            ),
           ),
         ),
       ),

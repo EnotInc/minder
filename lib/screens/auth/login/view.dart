@@ -20,13 +20,13 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
           padding: EdgeInsetsGeometry.all(16),
           child: Column(
             children: [
-              Expanded(child: SizedBox()),
+              Center(child: Image.asset('assets/MinderLogoV4.png', width: 256, height: 256)),
               Form(
                 key: _key,
                 child: Card(
@@ -85,7 +85,8 @@ class _LoginViewState extends State<LoginView> {
                   Text("Don't have an account?"),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).popAndPushNamed('/register');
+                      //Navigator.of(context).popAndPushNamed('/register');
+                      Navigator.pushReplacementNamed(context, '/register');
                     },
                     child: Text(
                       "Create a new one!",
@@ -95,21 +96,24 @@ class _LoginViewState extends State<LoginView> {
                 ],
               ),
               Expanded(child: SizedBox()),
-              SizedBox(
-                width: double.infinity,
-                child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(32), color: ThemeService.authColor),
-                  child: TextButton(
-                    onPressed: () {
-                      if (_key.currentState!.validate()) {
-                        Navigator.of(context).popAndPushNamed('/home');
-                      }
-                    },
-                    child: Text('Вход'),
-                  ),
-                ),
-              ),
             ],
+          ),
+        ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsetsGeometry.symmetric(vertical: 8, horizontal: 0),
+          child: SizedBox(
+            width: double.infinity,
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(32), color: ThemeService.authColor),
+              child: TextButton(
+                onPressed: () {
+                  if (_key.currentState!.validate()) {
+                    Navigator.of(context).popAndPushNamed('/home');
+                  }
+                },
+                child: Text('Вход'),
+              ),
+            ),
           ),
         ),
       ),

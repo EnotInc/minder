@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'dart:ui';
 
-//TODO: rewritte with json serializeble
+import 'package:json_annotation/json_annotation.dart';
+
+@JsonSerializable()
 class Note {
   int id;
   String title;
