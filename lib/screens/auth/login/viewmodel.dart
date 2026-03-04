@@ -11,6 +11,12 @@ class LoginViewModel extends ChangeNotifier {
   String email = "";
   String passoword = "";
 
+  Future<void> silentLogin() async {
+    if (await StorageService().isLoggedIn()) {
+      Navigator.pushReplacementNamed(ContextService.key.currentContext!, '/home');
+    }
+  }
+
   Future<void> loginUser() async {
     try {
       Map<String, dynamic> body = {"email": email, "password": passoword};

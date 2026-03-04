@@ -1,5 +1,6 @@
 import 'package:client/screens/home/viewmoder.dart';
 import 'package:client/services/date.dart';
+import 'package:client/services/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -20,8 +21,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    //final viewModer = context.read<HomeViewModel>();
-    // here I can use this to fetch user's notes
   }
 
   @override

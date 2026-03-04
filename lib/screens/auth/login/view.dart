@@ -21,6 +21,13 @@ class _LoginViewState extends State<LoginView> {
   bool _obscure = true;
 
   @override
+  void initState() {
+    super.initState();
+    final viewModel = context.read<LoginViewModel>();
+    viewModel.silentLogin();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<LoginViewModel>();
     return SafeArea(
@@ -112,7 +119,7 @@ class _LoginViewState extends State<LoginView> {
               child: TextButton(
                 onPressed: () {
                   if (_key.currentState!.validate()) {
-                    Navigator.of(context).popAndPushNamed('/home');
+                    viewModel.loginUser();
                   }
                 },
                 child: Text('Вход'),
