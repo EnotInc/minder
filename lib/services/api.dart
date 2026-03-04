@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
@@ -5,6 +6,8 @@ import './context.dart';
 import './helper.dart';
 
 class ApiService {
+  static final url = "http://localhost:3000/apiv1/";
+
   static Dio dio = Dio();
 
   static int token = 123;
@@ -15,35 +18,43 @@ class ApiService {
       //TODO: add responce.statusCode check
       return responce.data;
     } catch (error) {
-      _somethingWentWrong();
+      _somethingWentWrong(error);
     }
   }
 
-  Future<dynamic> post({required String path, required dynamic body}) async {
+  Future<dynamic> post({required String path, required Map<String, dynamic> body}) async {
     try {
+      //Map<String, dynamic> headers = {'Authorization': 'Bearer $token'};
+      // if (path.contains('auth')) {
+      //   headers = {};
+      // }
+
+      if (kDebugMode) {
+        debugPrint(body.toString());
+      }
+
       final responce = await dio.post(
-        path,
+        "$url$path",
         data: body,
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
+        //options: Options(headers: headers),
       );
-      //TODO: add responce.statusCode check
-      return responce.data;
+
+      return responce;
     } catch (error) {
-      _somethingWentWrong();
+      _somethingWentWrong(error);
     }
   }
 
-  //TODO: add message
-  static void _somethingWentWrong() {
+  static void _somethingWentWrong(Object error) {
     HelperService.alertDialog(
-      title: Text("foo"),
-      content: Text("bar"),
+      title: Text("Error"),
+      content: Text("Something went wrong: $error"),
       buttons: [
         TextButton(
           onPressed: () {
             Navigator.of(ContextService.key.currentContext!).pop();
           },
-          child: Text("baz"),
+          child: Text("ok"),
         ),
       ],
     );

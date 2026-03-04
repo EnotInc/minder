@@ -1,5 +1,7 @@
+import 'package:client/screens/auth/register/viewmodel.dart';
 import 'package:client/services/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -10,6 +12,7 @@ class RegisterView extends StatefulWidget {
 
 class _RegisterViewState extends State<RegisterView> {
   final login = TextEditingController();
+  final email = TextEditingController();
   final password = TextEditingController();
   final repeat = TextEditingController();
   final _key = GlobalKey<FormState>();
@@ -22,15 +25,15 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<RegisterviewModel>();
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Padding(
           padding: EdgeInsetsGeometry.all(16),
           child: Column(
             children: [
-              //Expanded(child: SizedBox()),
               Center(child: Image.asset('assets/MinderLogoV4.png', width: 256, height: 256)),
-              //Expanded(child: SizedBox()),
               Form(
                 key: _key,
                 child: Card(
@@ -46,11 +49,26 @@ class _RegisterViewState extends State<RegisterView> {
                           controller: login,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(labelText: 'login/email'),
+                          decoration: InputDecoration(labelText: 'login'),
                           validator: (value) {
                             final v = value?.trim() ?? '';
-                            if (v.isEmpty) return 'Enter login or email';
+                            if (v.isEmpty) return 'Enter login';
                             if (v.length < loginLen) return 'Login must be bigger than $loginLen symbols';
+                            viewModel.login = login.text;
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          cursorColor: Colors.white,
+                          controller: email,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(labelText: 'email'),
+                          validator: (value) {
+                            final v = value?.trim() ?? '';
+                            if (v.isEmpty) return 'Enter email';
+                            if (v.length < loginLen) return 'Login must be bigger than $loginLen symbols';
+                            viewModel.email = email.text;
                             return null;
                           },
                         ),
@@ -100,6 +118,7 @@ class _RegisterViewState extends State<RegisterView> {
                             if (v.isEmpty) return 'Enter password';
                             if (v.length < passwordLen) return 'Password must be bigger than $passwordLen symbols';
                             if (password.text != repeat.text) return 'Passwords must be the same';
+                            viewModel.passoword = repeat.text;
                             return null;
                           },
                         ),
@@ -114,7 +133,6 @@ class _RegisterViewState extends State<RegisterView> {
                   Text("Already have an account?"),
                   TextButton(
                     onPressed: () {
-                      // Navigator.of(context).popAndPushNamed('/login');
                       Navigator.pushReplacementNamed(context, '/login');
                     },
                     child: Text(
@@ -124,7 +142,6 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                 ],
               ),
-              Expanded(child: SizedBox()),
             ],
           ),
         ),
@@ -137,7 +154,7 @@ class _RegisterViewState extends State<RegisterView> {
               child: TextButton(
                 onPressed: () {
                   if (_key.currentState!.validate()) {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    viewModel.registerUser();
                   }
                 },
                 child: Text('Регистрация'),

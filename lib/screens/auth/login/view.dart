@@ -22,6 +22,7 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Padding(
           padding: EdgeInsetsGeometry.all(16),
           child: Column(
@@ -85,7 +86,6 @@ class _LoginViewState extends State<LoginView> {
                   Text("Don't have an account?"),
                   TextButton(
                     onPressed: () {
-                      //Navigator.of(context).popAndPushNamed('/register');
                       Navigator.pushReplacementNamed(context, '/register');
                     },
                     child: Text(
@@ -95,7 +95,6 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ],
               ),
-              Expanded(child: SizedBox()),
             ],
           ),
         ),
