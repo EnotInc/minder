@@ -14,6 +14,10 @@ class StorageService {
     return await storage.read(key: type) ?? '';
   }
 
+  Future<void> emptyStorage() async {
+    await storage.deleteAll();
+  }
+
   Future<bool> isLoggedIn() async {
     final checkToken = await getToken("access");
     return checkToken.isNotEmpty;

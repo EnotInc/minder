@@ -21,6 +21,8 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
+    final viewModel = context.read<HomeViewModel>();
+    viewModel.fetchNotes();
   }
 
   @override
@@ -46,22 +48,41 @@ class _HomeViewState extends State<HomeView> {
         ],
         backgroundColor: Colors.transparent,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: StaggeredGrid.count(
-            crossAxisCount: 2,
-            children: List.generate(notes.length, (index) {
-              return NoteCard(note: notes[index]);
-            }),
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/note_edit', arguments: {'note': null});
-        },
-        child: Icon(Icons.add),
-      ),
+      body: (viewModel.notes.isEmpty)
+          ? Column(
+              children: [
+                Expanded(child: SizedBox()),
+                Center(child: Text("Create your firt note!", style: TextStyle(fontSize: 32))),
+                Expanded(child: SizedBox()),
+                Center(child: AddNoteButton()),
+                Expanded(child: SizedBox()),
+              ],
+            )
+          : SafeArea(
+              child: SingleChildScrollView(
+                child: StaggeredGrid.count(
+                  crossAxisCount: 2,
+                  children: List.generate(notes.length, (index) {
+                    return NoteCard(note: notes[index]);
+                  }),
+                ),
+              ),
+            ),
+      floatingActionButton: (viewModel.notes.isEmpty) ? null : AddNoteButton(),
+    );
+  }
+}
+
+class AddNoteButton extends StatelessWidget {
+  const AddNoteButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.of(context).pushNamed('/note_edit', arguments: {'note': null});
+      },
+      child: Icon(Icons.add),
     );
   }
 }

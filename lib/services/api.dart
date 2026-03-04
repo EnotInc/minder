@@ -1,3 +1,4 @@
+import 'package:client/services/storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -10,13 +11,23 @@ class ApiService {
 
   static Dio dio = Dio();
 
-  static int token = 123;
-
   Future<dynamic> get({required String path}) async {
     try {
-      final responce = await dio.get(path, options: Options(headers: {'Authorization': 'Bearer $token'}));
-      //TODO: add responce.statusCode check
+      final token = await StorageService().getToken("access");
+      Map<String, dynamic> headers = {'Authorization': 'Bearer $token'};
+      // if (path.contains('auth')) {
+      //   headers = {};
+      // }
+
+      final responce = await dio.get("$url$path", options: Options(headers: headers));
       return responce.data;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        StorageService().emptyStorage();
+        Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+        return;
+      }
+      throw (e.message ?? "wrong token");
     } catch (error) {
       _somethingWentWrong(error);
     }
@@ -24,10 +35,11 @@ class ApiService {
 
   Future<dynamic> post({required String path, required Map<String, dynamic> body}) async {
     try {
-      //Map<String, dynamic> headers = {'Authorization': 'Bearer $token'};
-      // if (path.contains('auth')) {
-      //   headers = {};
-      // }
+      final token = await StorageService().getToken("access");
+      Map<String, dynamic> headers = {'Authorization': 'Bearer $token'};
+      if (path.contains('auth')) {
+        headers = {};
+      }
 
       if (kDebugMode) {
         debugPrint(body.toString());
@@ -36,7 +48,7 @@ class ApiService {
       final responce = await dio.post(
         "$url$path",
         data: body,
-        //options: Options(headers: headers),
+        options: Options(headers: headers),
       );
 
       return responce;
