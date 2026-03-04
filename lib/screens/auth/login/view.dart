@@ -1,5 +1,7 @@
+import 'package:client/screens/auth/login/viewmodel.dart';
 import 'package:client/services/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -20,6 +22,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<LoginViewModel>();
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -48,6 +51,7 @@ class _LoginViewState extends State<LoginView> {
                             final v = value?.trim() ?? '';
                             if (v.isEmpty) return 'Enter login or email';
                             if (v.length < loginLen) return 'Login must me bigger than $loginLen symbols';
+                            viewModel.email = login.text;
                             return null;
                           },
                         ),
@@ -72,6 +76,7 @@ class _LoginViewState extends State<LoginView> {
                             final v = value?.trim() ?? '';
                             if (v.isEmpty) return 'Enter password';
                             if (v.length < passwordLen) return 'Password must be bigger than $passwordLen symbols';
+                            viewModel.passoword = password.text;
                             return null;
                           },
                         ),

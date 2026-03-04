@@ -22,12 +22,14 @@ class RegisterviewModel extends ChangeNotifier {
 
         if (model.success) {
           if (model.data != null) {
-            StorageService().saveToken(token: model.data!.token);
+            StorageService().saveToken(type: "access", token: model.data!.accesToken);
+            StorageService().saveToken(type: "refresh", token: model.data!.refreshToken);
             Navigator.pushReplacementNamed(ContextService.key.currentContext!, '/home');
           } else {
             throw ("token is null");
           }
         } else {
+          //TODO: replace with alert dialog
           print(model.message ?? "some error");
         }
       }
