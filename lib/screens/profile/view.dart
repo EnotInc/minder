@@ -15,14 +15,12 @@ class _ProfileViewState extends State<ProfileView> {
       child: Scaffold(
         appBar: AppBar(automaticallyImplyActions: true),
         body: Column(),
-        bottomNavigationBar: Expanded(
-          child: TextButton(
-            onPressed: () {
-              StorageService().emptyStorage();
-              Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-            },
-            child: Text("quit"),
-          ),
+        bottomNavigationBar: TextButton(
+          onPressed: () {
+            StorageService().emptyStorage();
+            Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+          },
+          child: Text("quit"),
         ),
       ),
     );

@@ -23,10 +23,10 @@ class HomeViewModel with ChangeNotifier {
         if (model.success) {
           if (model.data != null) {
             _notes = model.data!.notes ?? [];
-            notifyListeners();
           }
         }
       }
+      notifyListeners();
     } catch (error) {
       print(error);
     }
@@ -34,7 +34,7 @@ class HomeViewModel with ChangeNotifier {
 
   void changeColor({required Color newColor, required Note note}) {
     final note0 = _notes.firstWhere((n) => n.id == note.id);
-    note0.color = newColor.toString();
+    note0.color = newColor;
     notifyListeners();
   }
 
@@ -61,6 +61,7 @@ class HomeViewModel with ChangeNotifier {
   }
 
   Future<void> deleteNote({required Note note}) async {
+    //TODO: reimplement
     _notes.remove(note);
     notifyListeners();
   }

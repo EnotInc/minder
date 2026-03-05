@@ -1,5 +1,4 @@
 import 'package:client/screens/home/viewmoder.dart';
-import 'package:client/services/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -36,10 +35,10 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       appBar: AppBar(
         leading: Icon(null),
-        title: SearchBar(hintText: "foobarbaz", autoFocus: false),
+        //title: SearchBar(hintText: "foobarbaz", autoFocus: false),
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(context).pushNamed('/profile');
             },
             icon: Icon(Icons.person),
@@ -58,12 +57,15 @@ class _HomeViewState extends State<HomeView> {
               ],
             )
           : SafeArea(
-              child: SingleChildScrollView(
-                child: StaggeredGrid.count(
-                  crossAxisCount: 2,
-                  children: List.generate(notes.length, (index) {
-                    return NoteCard(note: notes[index]);
-                  }),
+              child: RefreshIndicator(
+                onRefresh: viewModel.fetchNotes,
+                child: SingleChildScrollView(
+                  child: StaggeredGrid.count(
+                    crossAxisCount: 2,
+                    children: List.generate(notes.length, (index) {
+                      return NoteCard(note: notes[index]);
+                    }),
+                  ),
                 ),
               ),
             ),
@@ -104,7 +106,7 @@ class _NoteCardState extends State<NoteCard> {
       decoration: BoxDecoration(
         color: ThemeService.mainBackground,
         borderRadius: BorderRadius.circular(8),
-        border: BoxBorder.all(color: ColorService().fromString(widget.note.color)),
+        border: BoxBorder.all(color: widget.note.color),
       ),
       child: GestureDetector(
         child: Padding(
@@ -130,12 +132,12 @@ class _NoteCardState extends State<NoteCard> {
                 ],
               ),
               const SizedBox(height: 8),
-              Text(widget.note.description, overflow: TextOverflow.ellipsis, maxLines: 10, style: TextStyle(fontSize: 16)),
+              Text(widget.note.description ?? "", overflow: TextOverflow.ellipsis, maxLines: 10, style: TextStyle(fontSize: 16)),
             ],
           ),
         ),
         onTap: () {
-          Color changedColor = ColorService().fromString(widget.note.color);
+          Color changedColor = widget.note.color;
           showModalBottomSheet(
             useSafeArea: true,
             context: context,

@@ -15,7 +15,11 @@ class ColorService {
     if (colorStr == null) {
       return getRandomPastelColor();
     }
-    var color = color_lib.HexColor(colorStr);
-    return Color(int.parse(color.toString()));
+    try {
+      var color = color_lib.HexColor(colorStr);
+      return Color(int.parse(color.toString()));
+    } catch (error) {
+      return getRandomPastelColor();
+    }
   }
 }

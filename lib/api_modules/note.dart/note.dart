@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:client/services/color.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'note.g.dart';
@@ -11,9 +14,9 @@ class Note {
   String title;
 
   @JsonKey(name: "description")
-  String description;
+  String? description;
 
-  String? color;
+  Color color;
   // DateTime? eventDate;
   // String? endDate;
   // String? categoryId;
@@ -32,7 +35,7 @@ class Note {
     required this.id,
     required this.title,
     required this.description,
-    this.color,
+    required this.color,
     // this.eventDate,
     // this.endDate,
     // this.categoryId,

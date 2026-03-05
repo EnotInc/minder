@@ -13,7 +13,7 @@ import 'viewmoder.dart';
 class NoteEditview extends StatefulWidget {
   NoteEditview({super.key, this.note});
 
-  late Note? note;
+  final Note? note;
 
   @override
   State<NoteEditview> createState() => _NoteEditviewState();
@@ -28,7 +28,7 @@ class _NoteEditviewState extends State<NoteEditview> {
     super.initState();
     final viewModel = context.read<NoteEditViewModel>();
 
-    viewModel.note = widget.note ?? Note(id: -1, title: "", description: "", color: ColorService.getRandomPastelColor().toString());
+    viewModel.note = widget.note ?? Note(id: -1, title: "", description: "", color: ColorService.getRandomPastelColor());
     viewModel.isNew = true;
   }
 
@@ -40,7 +40,7 @@ class _NoteEditviewState extends State<NoteEditview> {
       header.text = viewModel.note!.title;
     }
     if (content.text != viewModel.note!.description) {
-      content.text = viewModel.note!.description;
+      content.text = viewModel.note!.description ?? "";
     }
 
     return Scaffold(
@@ -74,7 +74,7 @@ class _NoteEditviewState extends State<NoteEditview> {
           ),
           IconButton(
             onPressed: () {
-              Color changedColor = ColorService().fromString(widget.note!.color);
+              Color changedColor = widget.note!.color;
               HelperService.alertDialog(
                 title: Text("Choose a color"),
                 content: SingleChildScrollView(
@@ -103,7 +103,7 @@ class _NoteEditviewState extends State<NoteEditview> {
               );
             },
             icon: Icon(Icons.square_rounded),
-            color: ColorService().fromString(viewModel.note!.color),
+            color: viewModel.note?.color,
           ),
         ],
       ),
@@ -114,7 +114,7 @@ class _NoteEditviewState extends State<NoteEditview> {
             decoration: BoxDecoration(
               color: ThemeService.mainBackground,
               borderRadius: BorderRadius.circular(16),
-              border: BoxBorder.all(color: ColorService().fromString(widget.note!.color), width: 4.0),
+              border: BoxBorder.all(color: widget.note?.color ?? ColorService.getRandomPastelColor(), width: 4.0),
             ),
             child: Column(
               spacing: 12,
@@ -122,11 +122,11 @@ class _NoteEditviewState extends State<NoteEditview> {
                 Container(
                   padding: EdgeInsets.only(top: 24, bottom: 12),
                   child: Center(
-                    child: TextField(
+                    child: TextFormField(
                       controller: header,
                       style: TextStyle(fontSize: 32),
                       textAlign: TextAlign.center,
-                      decoration: InputDecoration(hintText: "So, what's up...", border: InputBorder.none),
+                      decoration: InputDecoration(hintText: "So, what's up...", border: InputBorder.none, errorStyle: TextStyle(fontSize: 12)),
                       onChanged: (value) {
                         viewModel.note!.title = header.text;
                       },
@@ -135,10 +135,11 @@ class _NoteEditviewState extends State<NoteEditview> {
                 ),
                 Flexible(
                   child: SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
                     child: TextField(
                       controller: content,
                       maxLines: null,
-                      minLines: 512,
+                      minLines: 64,
                       style: TextStyle(fontSize: 20),
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(hintText: "tell me more", border: InputBorder.none, contentPadding: EdgeInsets.all(8)),
@@ -155,9 +156,22 @@ class _NoteEditviewState extends State<NoteEditview> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await viewModel.completeNote();
-          if (context.mounted) {
-            Navigator.of(context).pop();
+          if (header.text.isEmpty) {
+            HelperService.alertDialog(
+              title: Center(child: Text("foo")),
+              content: Center(child: Text("bar")),
+              color: Colors.red,
+              buttons: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("baz"),
+                ),
+              ],
+            );
+          } else {
+            await viewModel.completeNote();
           }
         },
         child: Icon(Icons.check),

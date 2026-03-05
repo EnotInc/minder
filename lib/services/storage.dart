@@ -3,10 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class StorageService {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
-  static String access = "";
-
   Future<void> saveToken({required String type, required String token}) async {
-    access = token;
     await storage.write(key: type, value: token);
   }
 
@@ -19,7 +16,7 @@ class StorageService {
   }
 
   Future<bool> isLoggedIn() async {
-    final checkToken = await getToken("access");
+    final checkToken = await getToken("refresh");
     return checkToken.isNotEmpty;
   }
 }

@@ -1,9 +1,11 @@
 import 'package:client/api_modules/note.dart/note.dart';
 import 'package:client/services/context.dart';
 import 'package:client/services/helper.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../../services/color.dart';
+import '../../api_modules/body/body.dart';
+import '../../services/api.dart';
 
 class NoteEditViewModel extends ChangeNotifier {
   Note? _note;
@@ -20,13 +22,8 @@ class NoteEditViewModel extends ChangeNotifier {
   }
 
   void changeColor({required Color newColor}) {
-    _note!.color = newColor.toString();
+    _note!.color = newColor;
     notifyListeners();
-  }
-
-  Future<Note> makeNewNote() async {
-    final n = Note(id: 1, title: "foo", description: "", color: ColorService.getRandomPastelColor().toString());
-    return n;
   }
 
   void askAboutGoBack() {
@@ -95,7 +92,20 @@ class NoteEditViewModel extends ChangeNotifier {
   }
 
   Future<void> createNote() async {
-    // TODO: implement
+    if (note == null) return;
+
+    Map<String, dynamic> body = {
+      "note": {"header": note!.title, "text": note!.description, "color": "", "images": "", "is_notification": true},
+    };
+    final Response<dynamic>? response = await ApiService().post(path: "notes/add", body: body);
+
+    if (response != null) {
+      final model = Body<Null>.fromJson(response.data, (json) => null);
+
+      if (model.success) {
+        Navigator.of(ContextService.key.currentContext!).pop();
+      }
+    }
   }
 
   Future<void> changeNote() async {
