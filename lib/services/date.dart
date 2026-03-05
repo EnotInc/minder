@@ -28,7 +28,7 @@ class _DateSettingAlertState extends State<DateSettingAlert> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: widget.note.color!, width: 4.0),
+        border: Border.all(color: Color(int.parse(widget.note.color!)), width: 4.0),
         color: ThemeService.mainBackground,
       ),
       child: Column(

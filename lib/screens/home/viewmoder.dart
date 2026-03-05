@@ -1,24 +1,32 @@
+import 'package:client/api_modules/notesList/notesList.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import '../../api_modules/body/body.dart';
 import '../../api_modules/note.dart/note.dart';
 import '../../services/api.dart';
 import '../../services/context.dart';
 import '../../services/helper.dart';
 
 class HomeViewModel with ChangeNotifier {
-  final List<Note> _notes = [];
+  List<Note> _notes = [];
 
   List<Note> get notes => _notes;
 
   Future<void> fetchNotes() async {
     try {
       final Response<dynamic>? response = await ApiService().get(path: "notes");
-      print('foo');
+
       if (response != null) {
-        print('bar');
+        final model = Body<Noteslist>.fromJson(response.data, (json) => Noteslist.fromJson(json as Map<String, dynamic>));
+
+        if (model.success) {
+          if (model.data != null) {
+            _notes = model.data!.notes ?? [];
+            notifyListeners();
+          }
+        }
       }
-      print('baz');
     } catch (error) {
       print(error);
     }
@@ -26,7 +34,7 @@ class HomeViewModel with ChangeNotifier {
 
   void changeColor({required Color newColor, required Note note}) {
     final note0 = _notes.firstWhere((n) => n.id == note.id);
-    note0.color = newColor;
+    note0.color = newColor.toString();
     notifyListeners();
   }
 

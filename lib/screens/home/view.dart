@@ -1,6 +1,5 @@
 import 'package:client/screens/home/viewmoder.dart';
-import 'package:client/services/date.dart';
-import 'package:client/services/storage.dart';
+import 'package:client/services/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -105,7 +104,7 @@ class _NoteCardState extends State<NoteCard> {
       decoration: BoxDecoration(
         color: ThemeService.mainBackground,
         borderRadius: BorderRadius.circular(8),
-        border: BoxBorder.all(color: widget.note.color!),
+        border: BoxBorder.all(color: ColorService().fromString(widget.note.color)),
       ),
       child: GestureDetector(
         child: Padding(
@@ -117,26 +116,26 @@ class _NoteCardState extends State<NoteCard> {
                 centerTitle: true,
                 title: Text(widget.note.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 actions: [
-                  widget.note.isNotify
-                      ? IconButton(
-                          onPressed: () async {
-                            HelperService.alertDialog(
-                              content: DateService.dateSeting(note: widget.note),
-                              color: Colors.transparent,
-                            );
-                          },
-                          icon: Icon(Icons.notifications_active_outlined),
-                        )
-                      : SizedBox(),
+                  // widget.note.isNotify
+                  //     ? IconButton(
+                  //         onPressed: () async {
+                  //           HelperService.alertDialog(
+                  //             content: DateService.dateSeting(note: widget.note),
+                  //             color: Colors.transparent,
+                  //           );
+                  //         },
+                  //         icon: Icon(Icons.notifications_active_outlined),
+                  //       )
+                  //     : SizedBox(),
                 ],
               ),
               const SizedBox(height: 8),
-              Text(widget.note.content, overflow: TextOverflow.ellipsis, maxLines: 10, style: TextStyle(fontSize: 16)),
+              Text(widget.note.description, overflow: TextOverflow.ellipsis, maxLines: 10, style: TextStyle(fontSize: 16)),
             ],
           ),
         ),
         onTap: () {
-          Color changedColor = widget.note.color!;
+          Color changedColor = ColorService().fromString(widget.note.color);
           showModalBottomSheet(
             useSafeArea: true,
             context: context,

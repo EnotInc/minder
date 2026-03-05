@@ -15,19 +15,15 @@ class ApiService {
     try {
       final token = await StorageService().getToken("access");
       Map<String, dynamic> headers = {'Authorization': 'Bearer $token'};
-      // if (path.contains('auth')) {
-      //   headers = {};
-      // }
+      if (path.contains('auth')) {
+        headers = {};
+      }
 
       final responce = await dio.get("$url$path", options: Options(headers: headers));
-      return responce.data;
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        StorageService().emptyStorage();
-        Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-        return;
-      }
-      throw (e.message ?? "wrong token");
+      return responce;
+    } on DioException catch (_) {
+      StorageService().emptyStorage();
+      Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
     } catch (error) {
       _somethingWentWrong(error);
     }

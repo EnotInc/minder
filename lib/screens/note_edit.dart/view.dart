@@ -28,11 +28,7 @@ class _NoteEditviewState extends State<NoteEditview> {
     super.initState();
     final viewModel = context.read<NoteEditViewModel>();
 
-    if (widget.note == null) {
-      widget.note = Note(id: -1, title: "", content: "", color: ColorService.getRandomPastelColor());
-    }
-
-    viewModel.note = widget.note!;
+    viewModel.note = widget.note ?? Note(id: -1, title: "", description: "", color: ColorService.getRandomPastelColor().toString());
     viewModel.isNew = true;
   }
 
@@ -43,8 +39,8 @@ class _NoteEditviewState extends State<NoteEditview> {
     if (header.text != viewModel.note!.title) {
       header.text = viewModel.note!.title;
     }
-    if (content.text != viewModel.note!.content) {
-      content.text = viewModel.note!.content;
+    if (content.text != viewModel.note!.description) {
+      content.text = viewModel.note!.description;
     }
 
     return Scaffold(
@@ -78,7 +74,7 @@ class _NoteEditviewState extends State<NoteEditview> {
           ),
           IconButton(
             onPressed: () {
-              Color changedColor = viewModel.note!.color!;
+              Color changedColor = ColorService().fromString(widget.note!.color);
               HelperService.alertDialog(
                 title: Text("Choose a color"),
                 content: SingleChildScrollView(
@@ -107,7 +103,7 @@ class _NoteEditviewState extends State<NoteEditview> {
               );
             },
             icon: Icon(Icons.square_rounded),
-            color: viewModel.note!.color,
+            color: ColorService().fromString(viewModel.note!.color),
           ),
         ],
       ),
@@ -118,7 +114,7 @@ class _NoteEditviewState extends State<NoteEditview> {
             decoration: BoxDecoration(
               color: ThemeService.mainBackground,
               borderRadius: BorderRadius.circular(16),
-              border: BoxBorder.all(color: viewModel.note!.color!, width: 4.0),
+              border: BoxBorder.all(color: ColorService().fromString(widget.note!.color), width: 4.0),
             ),
             child: Column(
               spacing: 12,
@@ -147,7 +143,7 @@ class _NoteEditviewState extends State<NoteEditview> {
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(hintText: "tell me more", border: InputBorder.none, contentPadding: EdgeInsets.all(8)),
                       onChanged: (value) {
-                        viewModel.note!.content = content.text;
+                        viewModel.note!.description = content.text;
                       },
                     ),
                   ),

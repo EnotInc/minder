@@ -20,12 +20,12 @@ class NoteEditViewModel extends ChangeNotifier {
   }
 
   void changeColor({required Color newColor}) {
-    _note!.color = newColor;
+    _note!.color = newColor.toString();
     notifyListeners();
   }
 
   Future<Note> makeNewNote() async {
-    final n = Note(id: 1, title: "foo", content: "", color: ColorService.getRandomPastelColor());
+    final n = Note(id: 1, title: "foo", description: "", color: ColorService.getRandomPastelColor().toString());
     return n;
   }
 
