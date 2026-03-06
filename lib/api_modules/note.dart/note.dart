@@ -1,9 +1,18 @@
 import 'dart:ui';
 
-import 'package:client/services/color.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../services/color.dart';
+
 part 'note.g.dart';
+
+Color _colorFromJson(String? json) {
+  return json != null ? ColorService().fromString(json) : ColorService.getRandomPastelColor();
+}
+
+String? _colorToJson(Color color) {
+  return color.value.toRadixString(16);
+}
 
 @JsonSerializable()
 class Note {
@@ -16,7 +25,11 @@ class Note {
   @JsonKey(name: "description")
   String? description;
 
+  @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
   Color color;
+
+  @JsonKey(name: "is_important")
+  bool isImportant;
   // DateTime? eventDate;
   // String? endDate;
   // String? categoryId;
@@ -36,6 +49,7 @@ class Note {
     required this.title,
     required this.description,
     required this.color,
+    required this.isImportant,
     // this.eventDate,
     // this.endDate,
     // this.categoryId,

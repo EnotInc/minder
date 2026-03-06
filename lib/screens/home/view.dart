@@ -35,7 +35,6 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       appBar: AppBar(
         leading: Icon(null),
-        //title: SearchBar(hintText: "foobarbaz", autoFocus: false),
         actions: [
           IconButton(
             onPressed: () async {
@@ -106,7 +105,7 @@ class _NoteCardState extends State<NoteCard> {
       decoration: BoxDecoration(
         color: ThemeService.mainBackground,
         borderRadius: BorderRadius.circular(8),
-        border: BoxBorder.all(color: widget.note.color),
+        border: BoxBorder.all(color: widget.note.color, width: widget.note.isImportant ? 1 : 4),
       ),
       child: GestureDetector(
         child: Padding(

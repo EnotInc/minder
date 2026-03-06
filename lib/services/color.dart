@@ -16,8 +16,8 @@ class ColorService {
       return getRandomPastelColor();
     }
     try {
-      var color = color_lib.HexColor(colorStr);
-      return Color(int.parse(color.toString()));
+      var color = color_lib.HexColor(colorStr.substring(1));
+      return Color.fromARGB((255), (color.r * 255).toInt(), (color.g * 255).toInt(), (color.b * 255).toInt());
     } catch (error) {
       return getRandomPastelColor();
     }

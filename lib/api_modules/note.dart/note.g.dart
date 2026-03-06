@@ -10,7 +10,14 @@ Note _$NoteFromJson(Map<String, dynamic> json) => Note(
   id: (json['id'] as num).toInt(),
   title: json['title'] as String,
   description: json['description'] as String?,
-  color: json['color'] != null ? ColorService().fromString(json['color']) : ColorService.getRandomPastelColor(),
+  color: _colorFromJson(json['color'] as String?),
+  isImportant: json['is_important'] as bool,
 );
 
-Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{'id': instance.id, 'title': instance.title, 'description': instance.description, 'color': instance.color};
+Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
+  'id': instance.id,
+  'title': instance.title,
+  'description': instance.description,
+  'color': _colorToJson(instance.color),
+  'is_important': instance.isImportant,
+};

@@ -27,21 +27,14 @@ class _NoteEditviewState extends State<NoteEditview> {
   void initState() {
     super.initState();
     final viewModel = context.read<NoteEditViewModel>();
-
-    viewModel.note = widget.note ?? Note(id: -1, title: "", description: "", color: ColorService.getRandomPastelColor());
+    Note note = widget.note ?? Note(id: -1, title: "", description: "", color: ColorService.getRandomPastelColor(), isImportant: false);
+    viewModel.note = note;
     viewModel.isNew = true;
   }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<NoteEditViewModel>();
-
-    if (header.text != viewModel.note!.title) {
-      header.text = viewModel.note!.title;
-    }
-    if (content.text != viewModel.note!.description) {
-      content.text = viewModel.note!.description ?? "";
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -59,6 +52,12 @@ class _NoteEditviewState extends State<NoteEditview> {
         actions: [
           IconButton(
             onPressed: () {
+              viewModel.changeImportant();
+            },
+            icon: Icon(viewModel.note.isImportant ? Icons.error : Icons.error_outline),
+          ),
+          IconButton(
+            onPressed: () {
               viewModel.askAboutDelete();
             },
             icon: Icon(Icons.delete_forever_outlined),
@@ -66,7 +65,7 @@ class _NoteEditviewState extends State<NoteEditview> {
           IconButton(
             onPressed: () {
               HelperService.alertDialog(
-                content: DateService.dateSeting(note: viewModel.note!),
+                content: DateService.dateSeting(note: viewModel.note),
                 color: Colors.transparent,
               );
             },
@@ -74,7 +73,7 @@ class _NoteEditviewState extends State<NoteEditview> {
           ),
           IconButton(
             onPressed: () {
-              Color changedColor = widget.note!.color;
+              Color changedColor = viewModel.note.color;
               HelperService.alertDialog(
                 title: Text("Choose a color"),
                 content: SingleChildScrollView(
@@ -103,7 +102,7 @@ class _NoteEditviewState extends State<NoteEditview> {
               );
             },
             icon: Icon(Icons.square_rounded),
-            color: viewModel.note?.color,
+            color: viewModel.note.color,
           ),
         ],
       ),
@@ -114,7 +113,7 @@ class _NoteEditviewState extends State<NoteEditview> {
             decoration: BoxDecoration(
               color: ThemeService.mainBackground,
               borderRadius: BorderRadius.circular(16),
-              border: BoxBorder.all(color: widget.note?.color ?? ColorService.getRandomPastelColor(), width: 4.0),
+              border: BoxBorder.all(color: viewModel.note.color, width: 4.0),
             ),
             child: Column(
               spacing: 12,
@@ -128,7 +127,7 @@ class _NoteEditviewState extends State<NoteEditview> {
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(hintText: "So, what's up...", border: InputBorder.none, errorStyle: TextStyle(fontSize: 12)),
                       onChanged: (value) {
-                        viewModel.note!.title = header.text;
+                        viewModel.note.title = header.text;
                       },
                     ),
                   ),
@@ -144,7 +143,7 @@ class _NoteEditviewState extends State<NoteEditview> {
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(hintText: "tell me more", border: InputBorder.none, contentPadding: EdgeInsets.all(8)),
                       onChanged: (value) {
-                        viewModel.note!.description = content.text;
+                        viewModel.note.description = content.text;
                       },
                     ),
                   ),
