@@ -5,10 +5,10 @@ part "auth.g.dart";
 @JsonSerializable()
 class Auth {
   @JsonKey(name: "access_token")
-  String accesToken;
+  String? accesToken;
 
   @JsonKey(name: "refresh_token")
-  String refreshToken;
+  String? refreshToken;
 
   Auth({required this.accesToken, required this.refreshToken});
 

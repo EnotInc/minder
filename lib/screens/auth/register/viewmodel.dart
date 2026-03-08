@@ -1,3 +1,4 @@
+import 'package:client/enums/tokens.dart';
 import 'package:client/services/api.dart';
 import 'package:client/services/context.dart';
 import 'package:client/services/storage.dart';
@@ -22,19 +23,18 @@ class RegisterviewModel extends ChangeNotifier {
 
         if (model.success) {
           if (model.data != null) {
-            StorageService().saveToken(type: "access", token: model.data!.accesToken);
-            StorageService().saveToken(type: "refresh", token: model.data!.refreshToken);
+            StorageService().saveToken(type: Token.access.name, token: model.data!.accesToken!);
+            StorageService().saveToken(type: Token.refresh.name, token: model.data!.refreshToken!);
             Navigator.pushReplacementNamed(ContextService.key.currentContext!, '/home');
           } else {
-            throw ("token is null");
+            throw ("unable to register");
           }
         } else {
-          //TODO: replace with alert dialog
-          print(model.message ?? "some error");
+          throw (model.message ?? "And even we don't rly know what :) Sorry for that");
         }
       }
     } catch (error) {
-      print(error);
+      ApiService().somethingWentWrong(error);
     }
   }
 }

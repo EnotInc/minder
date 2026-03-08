@@ -79,7 +79,23 @@ class NoteEditViewModel extends ChangeNotifier {
   }
 
   Future<void> deleteNote() async {
-    // TODO: implement
+    try {
+      // TODO: test after null note fix
+      Map<String, dynamic> body = {"note_id": note.id};
+      final Response<dynamic>? response = await ApiService().delete(path: "notes/delete", body: body);
+
+      if (response != null) {
+        final model = Body<Null>.fromJson(response.data, (json) => null);
+        if (model.success) {
+          Navigator.of(ContextService.key.currentContext!).pop();
+          notifyListeners();
+          return;
+        }
+        throw (model.message ?? "unknown error");
+      }
+    } catch (error) {
+      ApiService().somethingWentWrong(error);
+    }
   }
 
   Future<void> completeNote() async {
@@ -92,18 +108,24 @@ class NoteEditViewModel extends ChangeNotifier {
   }
 
   Future<void> createNote() async {
-    final color = note.color.toHexString(includeHashSign: true, enableAlpha: false, toUpperCase: true).substring(2);
-    Map<String, dynamic> body = {
-      "note": {"header": note.title, "text": note.description, "color": "#$color", "images": "", "is_notification": false, "is_important": note.isImportant},
-    };
-    final Response<dynamic>? response = await ApiService().post(path: "notes/add", body: body);
+    try {
+      final color = note.color.toHexString(includeHashSign: true, enableAlpha: false, toUpperCase: true).substring(2);
+      Map<String, dynamic> body = {
+        "note": {"header": note.title, "text": note.description, "color": "#$color", "images": "", "is_notification": false, "is_important": note.isImportant},
+      };
+      final Response<dynamic>? response = await ApiService().post(path: "notes/add", body: body);
 
-    if (response != null) {
-      final model = Body<Null>.fromJson(response.data, (json) => null);
+      if (response != null) {
+        final model = Body<Null>.fromJson(response.data, (json) => null);
 
-      if (model.success) {
-        Navigator.of(ContextService.key.currentContext!).pop();
+        if (model.success) {
+          Navigator.of(ContextService.key.currentContext!).pop();
+          return;
+        }
+        throw (model.message ?? "unknown error");
       }
+    } catch (error) {
+      ApiService().somethingWentWrong(error);
     }
   }
 

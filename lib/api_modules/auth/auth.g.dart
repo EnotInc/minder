@@ -7,8 +7,8 @@ part of 'auth.dart';
 // **************************************************************************
 
 Auth _$AuthFromJson(Map<String, dynamic> json) => Auth(
-  accesToken: json['access_token'] as String,
-  refreshToken: json['refresh_token'] as String,
+  accesToken: json['access_token'] as String?,
+  refreshToken: json['refresh_token'] as String?,
 );
 
 Map<String, dynamic> _$AuthToJson(Auth instance) => <String, dynamic>{

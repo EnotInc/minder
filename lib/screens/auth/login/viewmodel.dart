@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../api_modules/auth/auth.dart';
+import '../../../enums/tokens.dart';
 import '../../../services/context.dart';
 import '../../../services/storage.dart';
 
@@ -12,7 +13,8 @@ class LoginViewModel extends ChangeNotifier {
   String passoword = "";
 
   Future<void> silentLogin() async {
-    if (await StorageService().isLoggedIn()) {
+    final response = await ApiService().get(path: "ping");
+    if (response.toString() == "pong" && await StorageService().isLoggedIn()) {
       Navigator.pushReplacementNamed(ContextService.key.currentContext!, '/home');
     }
   }
@@ -27,19 +29,18 @@ class LoginViewModel extends ChangeNotifier {
 
         if (model.success) {
           if (model.data != null) {
-            StorageService().saveToken(type: "access", token: model.data!.accesToken);
-            StorageService().saveToken(type: "refresh", token: model.data!.refreshToken);
+            StorageService().saveToken(type: Token.access.name, token: model.data!.accesToken!);
+            StorageService().saveToken(type: Token.refresh.name, token: model.data!.refreshToken!);
             Navigator.pushReplacementNamed(ContextService.key.currentContext!, '/home');
           } else {
-            throw ("token is null");
+            throw ("unable to login");
           }
         } else {
-          //TODO: replace with alert dialog
-          print(model.message ?? "some error");
+          throw (model.message ?? "And even we don't rly know what :) Sorry for that");
         }
       }
     } catch (error) {
-      print(error);
+      ApiService().somethingWentWrong(error);
     }
   }
 }

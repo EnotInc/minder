@@ -163,6 +163,7 @@ class _NoteCardState extends State<NoteCard> {
                 ListTile(
                   title: TextButton(
                     onPressed: () async {
+                      Navigator.pop(context);
                       viewModel.askAboutDelete(note: widget.note);
                     },
                     child: Text("Удалить"),

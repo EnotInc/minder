@@ -1,0 +1,1 @@
+enum Token { access, refresh }

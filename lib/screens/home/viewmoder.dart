@@ -23,16 +23,20 @@ class HomeViewModel with ChangeNotifier {
         if (model.success) {
           if (model.data != null) {
             _notes = model.data!.notes ?? [];
+            notifyListeners();
+            return;
           }
         }
+        throw (model.message ?? "unknown error");
       }
-      notifyListeners();
+      throw ("unknown error");
     } catch (error) {
-      print(error);
+      ApiService().somethingWentWrong(error);
     }
   }
 
   void changeColor({required Color newColor, required Note note}) {
+    // TODO: implement note edit
     final note0 = _notes.firstWhere((n) => n.id == note.id);
     note0.color = newColor;
     notifyListeners();
@@ -46,7 +50,7 @@ class HomeViewModel with ChangeNotifier {
         TextButton(
           onPressed: () async {
             await deleteNote(note: note);
-            Navigator.of(ContextService.key.currentContext!).popUntil((route) => route.settings.name == '/home');
+            Navigator.of(ContextService.key.currentContext!).pop();
           },
           child: Text("Да"),
         ),
@@ -61,8 +65,21 @@ class HomeViewModel with ChangeNotifier {
   }
 
   Future<void> deleteNote({required Note note}) async {
-    //TODO: reimplement
-    _notes.remove(note);
-    notifyListeners();
+    try {
+      Map<String, dynamic> body = {"note_id": note.id};
+      final Response<dynamic>? response = await ApiService().delete(path: "notes/delete", body: body);
+
+      if (response != null) {
+        final model = Body<Null>.fromJson(response.data, (json) => null);
+        if (model.success) {
+          fetchNotes();
+          return;
+        }
+        throw (model.message ?? "unknown error");
+      }
+      notifyListeners();
+    } catch (error) {
+      ApiService().somethingWentWrong(error);
+    }
   }
 }
