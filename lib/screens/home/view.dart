@@ -51,7 +51,7 @@ class _HomeViewState extends State<HomeView> {
                 Expanded(child: SizedBox()),
                 Center(child: Text("Create your firt note!", style: TextStyle(fontSize: 32))),
                 Expanded(child: SizedBox()),
-                Center(child: AddNoteButton()),
+                Center(child: AddNoteButton(viewModel: viewModel)),
                 Expanded(child: SizedBox()),
               ],
             )
@@ -68,19 +68,22 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
             ),
-      floatingActionButton: (viewModel.notes.isEmpty) ? null : AddNoteButton(),
+      floatingActionButton: (viewModel.notes.isEmpty) ? null : AddNoteButton(viewModel: viewModel),
     );
   }
 }
 
 class AddNoteButton extends StatelessWidget {
-  const AddNoteButton({super.key});
+  const AddNoteButton({super.key, required this.viewModel});
+  final HomeViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        Navigator.of(context).pushNamed('/note_edit', arguments: {'note': null});
+        Navigator.of(context).pushNamed('/note_edit', arguments: {'note': null}).then((_) async {
+          await viewModel.fetchNotes();
+        });
       },
       child: Icon(Icons.add),
     );
