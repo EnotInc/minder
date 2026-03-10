@@ -159,7 +159,7 @@ class _NoteCardState extends State<NoteCard> {
                         await viewModel.fetchNotes();
                       });
                     },
-                    child: Text("Изменить"),
+                    child: Text("Change"),
                   ),
                 ),
                 ListTile(
@@ -168,7 +168,7 @@ class _NoteCardState extends State<NoteCard> {
                       Navigator.pop(context);
                       viewModel.askAboutDelete(note: widget.note);
                     },
-                    child: Text("Удалить"),
+                    child: Text("Delete"),
                   ),
                 ),
                 ListTile(
@@ -202,7 +202,7 @@ class _NoteCardState extends State<NoteCard> {
                         ],
                       );
                     },
-                    child: Text("Выбрать цвет"),
+                    child: Text("Choose a color"),
                   ),
                 ),
               ];

@@ -122,7 +122,7 @@ class _LoginViewState extends State<LoginView> {
                     viewModel.loginUser();
                   }
                 },
-                child: Text('Вход'),
+                child: Text('Login'),
               ),
             ),
           ),

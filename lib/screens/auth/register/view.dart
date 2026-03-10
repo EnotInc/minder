@@ -157,7 +157,7 @@ class _RegisterViewState extends State<RegisterView> {
                     viewModel.registerUser();
                   }
                 },
-                child: Text('Регистрация'),
+                child: Text('Register'),
               ),
             ),
           ),

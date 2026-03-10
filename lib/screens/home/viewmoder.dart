@@ -44,21 +44,21 @@ class HomeViewModel with ChangeNotifier {
 
   void askAboutDelete({required Note note}) {
     HelperService.alertDialog(
-      title: Text("Информация"),
-      content: Text("Вы уверены что хотите удалить заметку '${note.title}'?"),
+      title: Text("Information"),
+      content: Text("Are you shoure you wanna delethe this note: '${note.title}'?"),
       buttons: [
         TextButton(
           onPressed: () async {
             await deleteNote(note: note);
             Navigator.of(ContextService.key.currentContext!).pop();
           },
-          child: Text("Да"),
+          child: Text("Yes"),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(ContextService.key.currentContext!).pop();
           },
-          child: Text("Нет"),
+          child: Text("No"),
         ),
       ],
     );

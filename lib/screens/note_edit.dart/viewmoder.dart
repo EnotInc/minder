@@ -28,20 +28,20 @@ class NoteEditViewModel extends ChangeNotifier {
 
   void askAboutGoBack() {
     HelperService.alertDialog(
-      title: Text('Внимание!'),
-      content: Text('Вы уверены что хотите выйти? Изменения не будут сохранены'),
+      title: Text('Attettion!'),
+      content: Text('Are you shoure you wanna leave? Unsaved changes will be lost'),
       buttons: [
         TextButton(
           onPressed: () async {
             Navigator.of(ContextService.key.currentContext!).popUntil((route) => route.settings.name == '/home');
           },
-          child: Text("Да"),
+          child: Text("Yes"),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(ContextService.key.currentContext!).pop();
           },
-          child: Text("Нет"),
+          child: Text("No"),
         ),
       ],
     );
@@ -53,21 +53,21 @@ class NoteEditViewModel extends ChangeNotifier {
 
   void askAboutDelete() {
     HelperService.alertDialog(
-      title: Text("Информация"),
-      content: Text("Вы уверены что хотите удалить заметку?"),
+      title: Text("Information"),
+      content: Text("Are you shoure you wanna delete this note?"),
       buttons: [
         TextButton(
           onPressed: () async {
             Navigator.of(ContextService.key.currentContext!).pop();
             await deleteNote();
           },
-          child: Text("Да"),
+          child: Text("Yes"),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(ContextService.key.currentContext!).pop();
           },
-          child: Text("Нет"),
+          child: Text("No"),
         ),
       ],
     );
