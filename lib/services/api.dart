@@ -62,20 +62,19 @@ class ApiService {
         debugPrint(body.toString());
       }
 
-      final token = await StorageService().getToken(Token.access.name);
+      final String token = await StorageService().getToken(Token.access.name);
       Map<String, dynamic> headers = {'Authorization': 'Bearer $token'};
       if (path.contains('auth')) {
         headers = {};
       }
-
       final responce = await dio.post(
         "$url$path",
         data: body,
         options: Options(headers: headers),
       );
-
       return responce;
     } on DioException catch (error) {
+      print(error);
       if (error.response!.statusCode == 401) {
         return await refreshToken(path: path, body: body, method: "POST");
       }

@@ -33,9 +33,6 @@ class NoteEditViewModel extends ChangeNotifier {
       buttons: [
         TextButton(
           onPressed: () async {
-            if (!isNew) {
-              await deleteNote();
-            }
             Navigator.of(ContextService.key.currentContext!).popUntil((route) => route.settings.name == '/home');
           },
           child: Text("Да"),
@@ -61,10 +58,8 @@ class NoteEditViewModel extends ChangeNotifier {
       buttons: [
         TextButton(
           onPressed: () async {
-            if (!isNew) {
-              await deleteNote();
-            }
-            Navigator.of(ContextService.key.currentContext!).popUntil((route) => route.settings.name == '/home');
+            Navigator.of(ContextService.key.currentContext!).pop();
+            await deleteNote();
           },
           child: Text("Да"),
         ),
@@ -80,7 +75,6 @@ class NoteEditViewModel extends ChangeNotifier {
 
   Future<void> deleteNote() async {
     try {
-      // TODO: test after null note fix
       Map<String, dynamic> body = {"note_id": note.id};
       final Response<dynamic>? response = await ApiService().delete(path: "notes/delete", body: body);
 
@@ -88,11 +82,12 @@ class NoteEditViewModel extends ChangeNotifier {
         final model = Body<Null>.fromJson(response.data, (json) => null);
         if (model.success) {
           Navigator.of(ContextService.key.currentContext!).pop();
-          notifyListeners();
           return;
+        } else {
+          throw (model.message ?? "unknown error");
         }
-        throw (model.message ?? "unknown error");
       }
+      throw ("unknown error");
     } catch (error) {
       ApiService().somethingWentWrong(error);
     }
@@ -122,14 +117,34 @@ class NoteEditViewModel extends ChangeNotifier {
           Navigator.of(ContextService.key.currentContext!).pop();
           return;
         }
-        throw (model.message ?? "unknown error");
+        throw (model.message ?? "unable to create note");
       }
+      throw ("unknown error");
     } catch (error) {
       ApiService().somethingWentWrong(error);
     }
   }
 
   Future<void> changeNote() async {
-    // TODO: implement
+    try {
+      final color = note.color.toHexString(includeHashSign: true, enableAlpha: false, toUpperCase: true).substring(2);
+      Map<String, dynamic> body = {
+        "note": {"note_id": note.id, "header": note.title, "text": note.description, "color": "#$color", "images": "", "is_notification": false, "is_important": note.isImportant},
+      };
+      final Response<dynamic>? response = await ApiService().post(path: "notes/edit", body: body);
+
+      if (response != null) {
+        final model = Body<Null>.fromJson(response.data, (json) => null);
+
+        if (model.success) {
+          Navigator.of(ContextService.key.currentContext!).pop();
+          return;
+        }
+        throw (model.message ?? "unable to edit note");
+      }
+      throw ("unknown error");
+    } catch (error) {
+      ApiService().somethingWentWrong(error);
+    }
   }
 }

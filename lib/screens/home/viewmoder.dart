@@ -1,6 +1,7 @@
 import 'package:client/api_modules/notesList/notesList.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../api_modules/body/body.dart';
 import '../../api_modules/note.dart/note.dart';
@@ -35,10 +36,9 @@ class HomeViewModel with ChangeNotifier {
     }
   }
 
-  void changeColor({required Color newColor, required Note note}) {
-    // TODO: implement note edit
-    final note0 = _notes.firstWhere((n) => n.id == note.id);
-    note0.color = newColor;
+  void changeColor({required Color newColor, required Note note}) async {
+    note.color = newColor;
+    await changeNote(note);
     notifyListeners();
   }
 
@@ -78,6 +78,28 @@ class HomeViewModel with ChangeNotifier {
         throw (model.message ?? "unknown error");
       }
       notifyListeners();
+    } catch (error) {
+      ApiService().somethingWentWrong(error);
+    }
+  }
+
+  Future<void> changeNote(Note note) async {
+    try {
+      final color = note.color.toHexString(includeHashSign: true, enableAlpha: false, toUpperCase: true).substring(2);
+      Map<String, dynamic> body = {
+        "note": {"note_id": note.id, "header": note.title, "text": note.description, "color": "#$color", "images": "", "is_notification": false, "is_important": note.isImportant},
+      };
+      final Response<dynamic>? response = await ApiService().post(path: "notes/edit", body: body);
+
+      if (response != null) {
+        final model = Body<Null>.fromJson(response.data, (json) => null);
+
+        if (!model.success) {
+          throw (model.message ?? "unable to edit note");
+        }
+        return;
+      }
+      throw ("unknown error");
     } catch (error) {
       ApiService().somethingWentWrong(error);
     }

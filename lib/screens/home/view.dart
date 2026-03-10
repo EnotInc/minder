@@ -108,7 +108,7 @@ class _NoteCardState extends State<NoteCard> {
       decoration: BoxDecoration(
         color: ThemeService.mainBackground,
         borderRadius: BorderRadius.circular(8),
-        border: BoxBorder.all(color: widget.note.color, width: widget.note.isImportant ? 1 : 4),
+        border: BoxBorder.all(color: widget.note.color, width: widget.note.isImportant ? 4 : 1),
       ),
       child: GestureDetector(
         child: Padding(
@@ -155,7 +155,9 @@ class _NoteCardState extends State<NoteCard> {
                 ListTile(
                   title: TextButton(
                     onPressed: () {
-                      Navigator.of(context).popAndPushNamed('/note_edit', arguments: {'note': widget.note});
+                      Navigator.of(context).popAndPushNamed('/note_edit', arguments: {'note': widget.note}).then((_) async {
+                        await viewModel.fetchNotes();
+                      });
                     },
                     child: Text("Изменить"),
                   ),
@@ -187,6 +189,7 @@ class _NoteCardState extends State<NoteCard> {
                             onPressed: () {
                               Navigator.of(context).popUntil((route) => route.isFirst);
                               viewModel.changeColor(newColor: changedColor, note: widget.note);
+                              setState(() {});
                             },
                             child: Text("Ok"),
                           ),

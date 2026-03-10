@@ -23,6 +23,9 @@ class RegisterviewModel extends ChangeNotifier {
 
         if (model.success) {
           if (model.data != null) {
+            if (model.data!.accesToken == null || model.data!.refreshToken == null) {
+              throw ("unable to login");
+            }
             StorageService().saveToken(type: Token.access.name, token: model.data!.accesToken!);
             StorageService().saveToken(type: Token.refresh.name, token: model.data!.refreshToken!);
             Navigator.pushReplacementNamed(ContextService.key.currentContext!, '/home');

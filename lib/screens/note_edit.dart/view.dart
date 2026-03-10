@@ -29,12 +29,14 @@ class _NoteEditviewState extends State<NoteEditview> {
     final viewModel = context.read<NoteEditViewModel>();
     Note note = widget.note ?? Note(id: -1, title: "", description: "", color: ColorService.getRandomPastelColor(), isImportant: false);
     viewModel.note = note;
-    viewModel.isNew = true;
+    viewModel.isNew = widget.note == null;
   }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<NoteEditViewModel>();
+    header.text = viewModel.note.title;
+    content.text = viewModel.note.description ?? "";
 
     return Scaffold(
       appBar: AppBar(
