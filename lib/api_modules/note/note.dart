@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:client/api_modules/notification/notification.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../services/color.dart';
@@ -30,6 +31,9 @@ class Note {
 
   @JsonKey(name: "is_important")
   bool isImportant;
+
+  @JsonKey(name: "notification")
+  Notification? notification;
   // DateTime? eventDate;
   // String? endDate;
   // String? categoryId;
@@ -50,6 +54,7 @@ class Note {
     required this.description,
     required this.color,
     required this.isImportant,
+    this.notification,
     // this.eventDate,
     // this.endDate,
     // this.categoryId,

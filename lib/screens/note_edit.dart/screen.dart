@@ -3,7 +3,7 @@ import 'package:client/screens/note_edit.dart/viewmoder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../api_modules/note.dart/note.dart';
+import '../../api_modules/note/note.dart';
 
 class NoteEditScreen extends StatelessWidget {
   const NoteEditScreen({super.key});

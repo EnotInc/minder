@@ -1,10 +1,11 @@
-import 'package:client/api_modules/note.dart/note.dart';
+import 'package:client/api_modules/note/note.dart';
 import 'package:client/services/context.dart';
 import 'package:client/services/helper.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Notification;
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
+import '../../api_modules/notification/notification.dart';
 import '../../api_modules/body/body.dart';
 import '../../services/api.dart';
 
@@ -105,8 +106,10 @@ class NoteEditViewModel extends ChangeNotifier {
   Future<void> createNote() async {
     try {
       final color = note.color.toHexString(includeHashSign: true, enableAlpha: false, toUpperCase: true).substring(2);
+      Map<String, dynamic> notify = {"date": note.notification?.remindAt, "repeat": false};
       Map<String, dynamic> body = {
-        "note": {"header": note.title, "text": note.description, "color": "#$color", "images": "", "is_notification": false, "is_important": note.isImportant},
+        "note": {"header": note.title, "text": note.description, "color": "#$color", "images": "", "is_important": note.isImportant},
+        "notification": note.notification != null ? notify : null,
       };
       final Response<dynamic>? response = await ApiService().post(path: "notes/add", body: body);
 
@@ -128,8 +131,10 @@ class NoteEditViewModel extends ChangeNotifier {
   Future<void> changeNote() async {
     try {
       final color = note.color.toHexString(includeHashSign: true, enableAlpha: false, toUpperCase: true).substring(2);
+      Map<String, dynamic> notify = {"date": note.notification?.remindAt, "repeat": false};
       Map<String, dynamic> body = {
-        "note": {"note_id": note.id, "header": note.title, "text": note.description, "color": "#$color", "images": "", "is_notification": false, "is_important": note.isImportant},
+        "note": {"note_id": note.id, "header": note.title, "text": note.description, "color": "#$color", "images": "", "is_important": note.isImportant},
+        "notification": note.notification != null ? notify : null,
       };
       final Response<dynamic>? response = await ApiService().post(path: "notes/edit", body: body);
 
@@ -145,6 +150,50 @@ class NoteEditViewModel extends ChangeNotifier {
       throw ("unknown error");
     } catch (error) {
       ApiService().somethingWentWrong(error);
+    }
+  }
+
+  void addDate(Note note, DateTime date, bool repeat) {
+    note.notification = Notification(id: -1, remindAt: date.toIso8601String());
+  }
+
+  Future<void> editDate(Note note, DateTime date, bool repeat) async {
+    try {
+      Map<String, dynamic> body = {
+        "note_id": note.id,
+        "notification": {"notificaton": note.notification!.id, "date": date.toIso8601String(), "repeat": repeat},
+      };
+
+      final Response<dynamic>? response = await ApiService().post(path: "notes/notify/edit", body: body);
+      if (response != null) {
+        final model = Body<Null>.fromJson(response.data, (json) => null);
+
+        if (!model.success) {
+          //TODO: show error message
+        }
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> deleteNotification(Note _) async {
+    if (isNew || note.notification!.id == -1) {
+      note.notification = null;
+      notifyListeners();
+      return;
+    }
+    try {
+      Map<String, dynamic> body = {"notification_id": note.notification!.id};
+      final Response<dynamic>? response = await ApiService().delete(path: "notes/notify/delete", body: body);
+      if (response != null) {
+        final model = Body<Null>.fromJson(response.data, (json) => null);
+        if (!model.success) {
+          // TODO: add error message
+        }
+      }
+    } catch (error) {
+      print(error);
     }
   }
 }

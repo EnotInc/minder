@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 
-import '../../api_modules/note.dart/note.dart';
+import '../../api_modules/note/note.dart';
 import '../../services/helper.dart';
 import '../../services/theme.dart';
 import '../../services/color.dart';
@@ -67,11 +67,15 @@ class _NoteEditviewState extends State<NoteEditview> {
           IconButton(
             onPressed: () {
               HelperService.alertDialog(
-                content: DateService.dateSeting(note: viewModel.note),
+                content: DateService.dateSeting(
+                  note: viewModel.note,
+                  onAdd: widget.note!.notification == null ? viewModel.addDate : viewModel.editDate,
+                  onDelete: viewModel.deleteNotification,
+                ),
                 color: Colors.transparent,
               );
             },
-            icon: Icon(Icons.edit_notifications_outlined),
+            icon: Icon(viewModel.isNew || viewModel.note.notification == null ? Icons.notification_add_outlined : Icons.edit_notifications_outlined),
           ),
           IconButton(
             onPressed: () {

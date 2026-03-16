@@ -16,9 +16,7 @@ class ColorService {
     }
     try {
       //String formattedHex = colorStr.replaceFirst('#', '0xFF');
-      print(colorStr);
       Color c = colorStr.toColor() ?? Colors.black;
-      print(c);
       return c;
     } catch (error) {
       return getRandomPastelColor();

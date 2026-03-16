@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../api_modules/body/body.dart';
-import '../../api_modules/note.dart/note.dart';
+import '../../api_modules/note/note.dart';
 import '../../services/api.dart';
 import '../../services/context.dart';
 import '../../services/helper.dart';
@@ -102,6 +102,45 @@ class HomeViewModel with ChangeNotifier {
       throw ("unknown error");
     } catch (error) {
       ApiService().somethingWentWrong(error);
+    }
+  }
+
+  Future<void> updateDate(Note note, DateTime date, bool repeat) async {
+    try {
+      Map<String, dynamic> body = {
+        "note_id": note.id,
+        "notification": {"notification_id": note.notification!.id, "date": date.toIso8601String(), "repeat": repeat},
+      };
+
+      final Response<dynamic>? response = await ApiService().post(path: "notes/notify/edit", body: body);
+      if (response != null) {
+        final model = Body<Null>.fromJson(response.data, (json) => null);
+
+        if (model.success) {
+          await fetchNotes();
+        } else {
+          //TODO: show error message
+        }
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> deleteNotification(Note note) async {
+    try {
+      Map<String, dynamic> body = {"notification_id": note.notification!.id};
+      final Response<dynamic>? response = await ApiService().delete(path: "notes/notify/delete", body: body);
+      if (response != null) {
+        final model = Body<Null>.fromJson(response.data, (json) => null);
+
+        if (!model.success) {
+          // TODO: add error message
+        }
+        fetchNotes();
+      }
+    } catch (error) {
+      print(error);
     }
   }
 }
