@@ -28,7 +28,7 @@ class _DateSettingAlertState extends State<DateSettingAlert> {
   @override
   void initState() {
     super.initState();
-    date = DateTime.parse(widget.note.notification?.remindAt ?? "${DateTime.now().toIso8601String()}+03");
+    date = DateTime.parse(widget.note.notification?.remindAt ?? DateTime.now().toIso8601String());
   }
 
   @override

@@ -1,11 +1,12 @@
-import 'package:client/api_modules/body/body.dart';
-import 'package:client/services/api.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../api_modules/auth/auth.dart';
+import '../../../api_modules/body/body.dart';
 import '../../../enums/tokens.dart';
+import '../../../services/api.dart';
 import '../../../services/context.dart';
+import '../../../services/fcm.dart';
 import '../../../services/storage.dart';
 
 class LoginViewModel extends ChangeNotifier {
@@ -21,7 +22,8 @@ class LoginViewModel extends ChangeNotifier {
 
   Future<void> loginUser() async {
     try {
-      Map<String, dynamic> body = {"email": email, "password": passoword};
+      final token = await FCM.token();
+      Map<String, dynamic> body = {"email": email, "password": passoword, "fcmToken": token};
 
       final Response<dynamic>? response = await ApiService().post(path: "auth/login", body: body);
       if (response != null) {

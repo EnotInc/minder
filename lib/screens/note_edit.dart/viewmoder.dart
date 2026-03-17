@@ -107,6 +107,9 @@ class NoteEditViewModel extends ChangeNotifier {
     try {
       final color = note.color.toHexString(includeHashSign: true, enableAlpha: false, toUpperCase: true).substring(2);
       Map<String, dynamic> notify = {"date": note.notification?.remindAt, "repeat": false};
+      if (note.notification == null) {
+        notify = {};
+      }
       Map<String, dynamic> body = {
         "note": {"header": note.title, "text": note.description, "color": "#$color", "images": "", "is_important": note.isImportant},
         "notification": note.notification != null ? notify : null,
@@ -132,6 +135,9 @@ class NoteEditViewModel extends ChangeNotifier {
     try {
       final color = note.color.toHexString(includeHashSign: true, enableAlpha: false, toUpperCase: true).substring(2);
       Map<String, dynamic> notify = {"date": note.notification?.remindAt, "repeat": false};
+      if (note.notification == null) {
+        notify = {};
+      }
       Map<String, dynamic> body = {
         "note": {"note_id": note.id, "header": note.title, "text": note.description, "color": "#$color", "images": "", "is_important": note.isImportant},
         "notification": note.notification != null ? notify : null,
@@ -153,8 +159,29 @@ class NoteEditViewModel extends ChangeNotifier {
     }
   }
 
-  void addDate(Note note, DateTime date, bool repeat) {
+  void addDate(Note note, DateTime date, bool repeat) async {
     note.notification = Notification(id: -1, remindAt: date.toIso8601String());
+    try {
+      if (!isNew && note.id != -1) {
+        Map<String, dynamic> notify = {"date": note.notification?.remindAt, "repeat": false};
+        Map<String, dynamic> body = {"note_id": note.id, "notification": notify};
+
+        final Response<dynamic>? response = await ApiService().post(path: "notes/notify/add", body: body);
+
+        if (response != null) {
+          final model = Body<Null>.fromJson(response.data, (json) => null);
+
+          if (!model.success) {
+            // TODO: add notification
+            print(model.message ?? "cannot add notificaton");
+          }
+        }
+      }
+      //
+    } catch (error) {
+      print(error);
+    }
+    notifyListeners();
   }
 
   Future<void> editDate(Note note, DateTime date, bool repeat) async {
@@ -172,6 +199,7 @@ class NoteEditViewModel extends ChangeNotifier {
           //TODO: show error message
         }
       }
+      notifyListeners();
     } catch (error) {
       print(error);
     }
@@ -192,8 +220,10 @@ class NoteEditViewModel extends ChangeNotifier {
           // TODO: add error message
         }
       }
+      note.notification = null;
     } catch (error) {
       print(error);
     }
+    notifyListeners();
   }
 }

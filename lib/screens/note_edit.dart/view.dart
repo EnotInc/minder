@@ -69,13 +69,13 @@ class _NoteEditviewState extends State<NoteEditview> {
               HelperService.alertDialog(
                 content: DateService.dateSeting(
                   note: viewModel.note,
-                  onAdd: widget.note!.notification == null ? viewModel.addDate : viewModel.editDate,
+                  onAdd: viewModel.note.notification == null ? viewModel.addDate : viewModel.editDate,
                   onDelete: viewModel.deleteNotification,
                 ),
                 color: Colors.transparent,
               );
             },
-            icon: Icon(viewModel.isNew || viewModel.note.notification == null ? Icons.notification_add_outlined : Icons.edit_notifications_outlined),
+            icon: Icon(viewModel.note.notification == null ? Icons.notification_add_outlined : Icons.edit_notifications_outlined),
           ),
           IconButton(
             onPressed: () {

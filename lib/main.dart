@@ -1,9 +1,17 @@
+import 'package:client/firebase_options.dart';
 import 'package:client/routes.dart';
 import 'package:client/services/context.dart';
 import 'package:client/services/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseMessaging.instance.requestPermission(provisional: true);
+  await FirebaseMessaging.instance.setAutoInitEnabled(true);
+
   runApp(const Minder());
 }
 

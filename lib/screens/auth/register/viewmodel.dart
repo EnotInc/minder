@@ -1,12 +1,13 @@
-import 'package:client/enums/tokens.dart';
-import 'package:client/services/api.dart';
-import 'package:client/services/context.dart';
-import 'package:client/services/storage.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../api_modules/auth/auth.dart';
 import '../../../api_modules/body/body.dart';
+import '../../../enums/tokens.dart';
+import '../../../services/api.dart';
+import '../../../services/context.dart';
+import '../../../services/fcm.dart';
+import '../../../services/storage.dart';
 
 class RegisterviewModel extends ChangeNotifier {
   String login = "";
@@ -15,7 +16,8 @@ class RegisterviewModel extends ChangeNotifier {
 
   Future<void> registerUser() async {
     try {
-      Map<String, dynamic> body = {"username": login, "email": email, "password": passoword};
+      final token = await FCM.token();
+      Map<String, dynamic> body = {"username": login, "email": email, "password": passoword, "fcmToken": token};
 
       final Response<dynamic>? response = await ApiService().post(path: "auth/register", body: body);
       if (response != null) {
