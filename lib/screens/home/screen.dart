@@ -1,4 +1,4 @@
-import 'package:client/screens/home/viewmoder.dart';
+import 'package:client/screens/home/viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

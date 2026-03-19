@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:client/api_modules/notesList/notesList.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:infinite_calendar_view/infinite_calendar_view.dart';
 
 import '../../api_modules/body/body.dart';
 import '../../api_modules/note/note.dart';
@@ -11,8 +14,13 @@ import '../../services/helper.dart';
 
 class HomeViewModel with ChangeNotifier {
   List<Note> _notes = [];
+  List<Event> _events = [];
 
   List<Note> get notes => _notes;
+  List<Event> get events {
+    _events = notesAsEvents();
+    return _events;
+  }
 
   Future<void> fetchNotes() async {
     try {
@@ -32,6 +40,7 @@ class HomeViewModel with ChangeNotifier {
       }
       throw ("unknown error");
     } catch (error) {
+      //NOTE: other error messages I can show like here
       ApiService().somethingWentWrong(error);
     }
   }
@@ -142,5 +151,13 @@ class HomeViewModel with ChangeNotifier {
     } catch (error) {
       print(error);
     }
+  }
+
+  List<Event> notesAsEvents() {
+    List<Event> events = _notes.where((note) => note.notification != null).map((note) {
+      final t = note.notification!.remindAt;
+      return Event(startTime: t, endTime: t.add(Duration(hours: 1)), title: note.title, description: note.description, color: note.color, data: note);
+    }).toList();
+    return events;
   }
 }

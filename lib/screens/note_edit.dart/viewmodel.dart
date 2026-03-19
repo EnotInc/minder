@@ -12,7 +12,6 @@ import '../../services/api.dart';
 class NoteEditViewModel extends ChangeNotifier {
   late Note note;
 
-  //NOTE: when it's true and user is exiting the screen - create a new note in db
   bool isNew = false;
 
   DateTime? selectedDate;
@@ -106,7 +105,7 @@ class NoteEditViewModel extends ChangeNotifier {
   Future<void> createNote() async {
     try {
       final color = note.color.toHexString(includeHashSign: true, enableAlpha: false, toUpperCase: true).substring(2);
-      Map<String, dynamic> notify = {"date": note.notification?.remindAt, "repeat": false};
+      Map<String, dynamic> notify = {"date": note.notification?.remindAt.toIso8601String(), "repeat": false};
       if (note.notification == null) {
         notify = {};
       }
@@ -134,7 +133,7 @@ class NoteEditViewModel extends ChangeNotifier {
   Future<void> changeNote() async {
     try {
       final color = note.color.toHexString(includeHashSign: true, enableAlpha: false, toUpperCase: true).substring(2);
-      Map<String, dynamic> notify = {"date": note.notification?.remindAt, "repeat": false};
+      Map<String, dynamic> notify = {"date": note.notification?.remindAt.toIso8601String(), "repeat": false};
       if (note.notification == null) {
         notify = {};
       }
@@ -160,10 +159,10 @@ class NoteEditViewModel extends ChangeNotifier {
   }
 
   void addDate(Note note, DateTime date, bool repeat) async {
-    note.notification = Notification(id: -1, remindAt: date.toIso8601String());
+    note.notification = Notification(id: -1, remindAt: date);
     try {
       if (!isNew && note.id != -1) {
-        Map<String, dynamic> notify = {"date": note.notification?.remindAt, "repeat": false};
+        Map<String, dynamic> notify = {"date": note.notification?.remindAt.toIso8601String(), "repeat": false};
         Map<String, dynamic> body = {"note_id": note.id, "notification": notify};
 
         final Response<dynamic>? response = await ApiService().post(path: "notes/notify/add", body: body);

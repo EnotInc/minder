@@ -1,10 +1,12 @@
-import 'package:client/screens/home/viewmoder.dart';
-import 'package:client/screens/home/note_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:client/enums/view_state.dart';
+import 'package:client/screens/home/calendar_view.dart';
+import 'package:client/screens/home/viewmodel.dart';
+import 'package:flutter/material.dart' hide GridView;
 import 'package:provider/provider.dart';
 
 import '../../api_modules/note/note.dart';
+import 'widgets/add_widget.dart';
+import 'grid_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -14,6 +16,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  ViewState curView = ViewState.grid;
+
   @override
   void initState() {
     super.initState();
@@ -32,7 +36,19 @@ class _HomeViewState extends State<HomeView> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(null),
+        leading: IconButton(
+          onPressed: () {
+            setState(() {
+              switch (curView) {
+                case ViewState.grid:
+                  curView = ViewState.calendar;
+                case ViewState.calendar:
+                  curView = ViewState.grid;
+              }
+            });
+          },
+          icon: getIcon(curView),
+        ),
         actions: [
           IconButton(
             onPressed: () async {
@@ -53,37 +69,23 @@ class _HomeViewState extends State<HomeView> {
                 Expanded(child: SizedBox()),
               ],
             )
-          : SafeArea(
-              child: RefreshIndicator(
-                onRefresh: viewModel.fetchNotes,
-                child: SingleChildScrollView(
-                  child: StaggeredGrid.count(
-                    crossAxisCount: 2,
-                    children: List.generate(notes.length, (index) {
-                      return NoteCard(note: notes[index]);
-                    }),
-                  ),
-                ),
-              ),
+          : IndexedStack(
+              index: curView.index,
+              children: [
+                GridView(viewModel: viewModel),
+                CalendarView(viewModel: viewModel),
+              ],
             ),
       floatingActionButton: (viewModel.notes.isEmpty) ? null : AddNoteButton(viewModel: viewModel),
     );
   }
 }
 
-class AddNoteButton extends StatelessWidget {
-  const AddNoteButton({super.key, required this.viewModel});
-  final HomeViewModel viewModel;
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {
-        Navigator.of(context).pushNamed('/note_edit', arguments: {'note': null}).then((_) async {
-          await viewModel.fetchNotes();
-        });
-      },
-      child: Icon(Icons.add),
-    );
+Icon getIcon(ViewState state) {
+  switch (state) {
+    case ViewState.grid:
+      return Icon(Icons.calendar_month_outlined);
+    case ViewState.calendar:
+      return Icon(Icons.grid_view_rounded);
   }
 }

@@ -8,10 +8,10 @@ import '../../services/helper.dart';
 import '../../services/theme.dart';
 import '../../services/color.dart';
 
-import 'viewmoder.dart';
+import 'viewmodel.dart';
 
 class NoteEditview extends StatefulWidget {
-  NoteEditview({super.key, this.note});
+  const NoteEditview({super.key, this.note});
 
   final Note? note;
 
@@ -42,11 +42,7 @@ class _NoteEditviewState extends State<NoteEditview> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            if (header.text.isNotEmpty || content.text.isNotEmpty) {
-              viewModel.askAboutGoBack();
-            } else {
-              Navigator.of(context).pop();
-            }
+            Navigator.of(context).pop();
           },
           icon: Icon(Icons.arrow_back),
         ),

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 
-import '../../api_modules/note/note.dart';
-import '../../services/helper.dart';
-import '../../services/theme.dart';
-import 'viewmoder.dart';
+import '../../../api_modules/note/note.dart';
+import '../../../services/helper.dart';
+import '../../../services/theme.dart';
+import '../viewmodel.dart';
 
 class NoteCard extends StatefulWidget {
   final Note note;

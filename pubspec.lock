@@ -400,6 +400,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  infinite_calendar_view:
+    dependency: "direct main"
+    description:
+      name: infinite_calendar_view
+      sha256: "2d5dfc486503dc0b3fd5b516149d930b42f0c462b2000dd0eb3272fd429aca54"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.11.2"
   io:
     dependency: transitive
     description:

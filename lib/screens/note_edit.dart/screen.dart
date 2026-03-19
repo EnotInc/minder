@@ -1,5 +1,5 @@
 import 'package:client/screens/note_edit.dart/view.dart';
-import 'package:client/screens/note_edit.dart/viewmoder.dart';
+import 'package:client/screens/note_edit.dart/viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
