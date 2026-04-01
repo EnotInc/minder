@@ -1,6 +1,8 @@
 import 'package:client/firebase_options.dart';
 import 'package:client/routes.dart';
+import 'package:client/services/api.dart';
 import 'package:client/services/context.dart';
+import 'package:client/services/storage.dart';
 import 'package:client/services/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,14 +14,24 @@ void main() async {
   await FirebaseMessaging.instance.requestPermission(provisional: true);
   await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
-  runApp(const Minder());
+  String initialRoute = "/login";
+
+  final response = await ApiService().get(path: "ping");
+  if (response.toString() == "pong" && await StorageService().isLoggedIn()) {
+    initialRoute = "/home";
+    //Navigator.pushReplacementNamed(ContextService.key.currentContext!, '/home');
+  }
+
+  runApp(Minder(initialRoute: initialRoute));
 }
 
 class Minder extends StatelessWidget {
-  const Minder({super.key});
+  const Minder({super.key, required this.initialRoute});
+
+  final String initialRoute;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Minder', navigatorKey: ContextService.key, routes: routes, initialRoute: '/login', theme: ThemeService.defaultTheme);
+    return MaterialApp(title: 'Minder', navigatorKey: ContextService.key, routes: routes, initialRoute: initialRoute, theme: ThemeService.defaultTheme);
   }
 }

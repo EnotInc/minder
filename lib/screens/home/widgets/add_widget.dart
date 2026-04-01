@@ -12,6 +12,7 @@ class AddNoteButton extends StatelessWidget {
       onPressed: () {
         Navigator.of(context).pushNamed('/note_edit', arguments: {'note': null}).then((_) async {
           await viewModel.fetchNotes();
+          viewModel.events = viewModel.notesAsEvents();
         });
       },
       child: Icon(Icons.add),

@@ -17,6 +17,11 @@ class HomeViewModel with ChangeNotifier {
   List<Event> _events = [];
 
   List<Note> get notes => _notes;
+
+  set events(List<Event> data) {
+    _events = data;
+  }
+
   List<Event> get events {
     _events = notesAsEvents();
     return _events;
@@ -32,6 +37,7 @@ class HomeViewModel with ChangeNotifier {
         if (model.success) {
           if (model.data != null) {
             _notes = model.data!.notes ?? [];
+            _events = notesAsEvents();
             notifyListeners();
             return;
           }
@@ -146,7 +152,7 @@ class HomeViewModel with ChangeNotifier {
         if (!model.success) {
           // TODO: add error message
         }
-        fetchNotes();
+        await fetchNotes();
       }
     } catch (error) {
       print(error);

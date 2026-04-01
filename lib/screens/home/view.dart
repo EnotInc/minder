@@ -5,6 +5,7 @@ import 'package:flutter/material.dart' hide GridView;
 import 'package:provider/provider.dart';
 
 import '../../api_modules/note/note.dart';
+import '../../services/storage.dart';
 import 'widgets/add_widget.dart';
 import 'grid_view.dart';
 
@@ -23,6 +24,11 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     final viewModel = context.read<HomeViewModel>();
     viewModel.fetchNotes();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -52,10 +58,18 @@ class _HomeViewState extends State<HomeView> {
         actions: [
           IconButton(
             onPressed: () async {
-              Navigator.of(context).pushNamed('/profile');
+              //Navigator.of(context).pushNamed('/profile');
+              StorageService().emptyStorage();
+              Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
             },
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.exit_to_app_rounded),
           ),
+          //  IconButton(
+          //     onPressed: () async {
+          //       Navigator.of(context).pushNamed('/profile');
+          //     },
+          //     icon: Icon(Icons.person),
+          //   ),
         ],
         backgroundColor: Colors.transparent,
       ),

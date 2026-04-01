@@ -13,13 +13,6 @@ class LoginViewModel extends ChangeNotifier {
   String email = "";
   String passoword = "";
 
-  Future<void> silentLogin() async {
-    final response = await ApiService().get(path: "ping");
-    if (response.toString() == "pong" && await StorageService().isLoggedIn()) {
-      Navigator.pushReplacementNamed(ContextService.key.currentContext!, '/home');
-    }
-  }
-
   Future<void> loginUser() async {
     try {
       final token = await FCM.token();
