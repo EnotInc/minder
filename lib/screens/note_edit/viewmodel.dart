@@ -89,7 +89,7 @@ class NoteEditViewModel extends ChangeNotifier {
       }
       throw ("unknown error");
     } catch (error) {
-      ApiService().somethingWentWrong(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 
@@ -126,7 +126,7 @@ class NoteEditViewModel extends ChangeNotifier {
       }
       throw ("unknown error");
     } catch (error) {
-      ApiService().somethingWentWrong(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 
@@ -154,7 +154,7 @@ class NoteEditViewModel extends ChangeNotifier {
       }
       throw ("unknown error");
     } catch (error) {
-      ApiService().somethingWentWrong(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 
@@ -171,14 +171,13 @@ class NoteEditViewModel extends ChangeNotifier {
           final model = Body<Null>.fromJson(response.data, (json) => null);
 
           if (!model.success) {
-            // TODO: add notification
-            print(model.message ?? "cannot add notificaton");
+            throw ("Cannot add notification: ${model.message ?? "unknown error"}");
           }
         }
       }
       //
     } catch (error) {
-      print(error);
+      HelperService().somethingWentWrong(error);
     }
     notifyListeners();
   }
@@ -195,12 +194,12 @@ class NoteEditViewModel extends ChangeNotifier {
         final model = Body<Null>.fromJson(response.data, (json) => null);
 
         if (!model.success) {
-          //TODO: show error message
+          throw ("Unable to change the date: ${model.message ?? "unknown error"}");
         }
       }
       notifyListeners();
     } catch (error) {
-      print(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 
@@ -216,12 +215,12 @@ class NoteEditViewModel extends ChangeNotifier {
       if (response != null) {
         final model = Body<Null>.fromJson(response.data, (json) => null);
         if (!model.success) {
-          // TODO: add error message
+          throw ("Unable to delete note: ${model.message ?? "unknown error"}");
         }
       }
       note.notification = null;
     } catch (error) {
-      print(error);
+      HelperService().somethingWentWrong(error);
     }
     notifyListeners();
   }

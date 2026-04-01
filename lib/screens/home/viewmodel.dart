@@ -46,8 +46,7 @@ class HomeViewModel with ChangeNotifier {
       }
       throw ("unknown error");
     } catch (error) {
-      //NOTE: other error messages I can show like here
-      ApiService().somethingWentWrong(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 
@@ -94,7 +93,7 @@ class HomeViewModel with ChangeNotifier {
       }
       notifyListeners();
     } catch (error) {
-      ApiService().somethingWentWrong(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 
@@ -116,7 +115,7 @@ class HomeViewModel with ChangeNotifier {
       }
       throw ("unknown error");
     } catch (error) {
-      ApiService().somethingWentWrong(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 
@@ -134,11 +133,11 @@ class HomeViewModel with ChangeNotifier {
         if (model.success) {
           await fetchNotes();
         } else {
-          //TODO: show error message
+          throw ("Unable to load notes: ${model.message ?? "unknown error"}");
         }
       }
     } catch (error) {
-      print(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 
@@ -150,12 +149,12 @@ class HomeViewModel with ChangeNotifier {
         final model = Body<Null>.fromJson(response.data, (json) => null);
 
         if (!model.success) {
-          // TODO: add error message
+          throw ("Unable to delete notification: ${model.message ?? "unknown error"}");
         }
         await fetchNotes();
       }
     } catch (error) {
-      print(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 

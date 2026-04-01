@@ -14,21 +14,6 @@ class ApiService {
 
   static Dio dio = Dio();
 
-  Future<void> somethingWentWrong(Object error) async {
-    HelperService.alertDialog(
-      title: Text("Error"),
-      content: Text("Something went wrong: $error"),
-      buttons: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(ContextService.key.currentContext!).pop();
-          },
-          child: Text("ok"),
-        ),
-      ],
-    );
-  }
-
   Future<dynamic> get({required String path}) async {
     try {
       if (kDebugMode) {
@@ -51,7 +36,7 @@ class ApiService {
       Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       StorageService().emptyStorage();
     } catch (error) {
-      somethingWentWrong(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 
@@ -81,7 +66,7 @@ class ApiService {
       Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       StorageService().emptyStorage();
     } catch (error) {
-      somethingWentWrong(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 
@@ -109,7 +94,7 @@ class ApiService {
       Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       StorageService().emptyStorage();
     } catch (error) {
-      somethingWentWrong(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 
@@ -152,7 +137,7 @@ class ApiService {
     } catch (error) {
       Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       StorageService().emptyStorage();
-      somethingWentWrong(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 }

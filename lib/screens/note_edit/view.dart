@@ -39,6 +39,7 @@ class _NoteEditviewState extends State<NoteEditview> {
     content.text = viewModel.note.description ?? "";
 
     return Scaffold(
+      backgroundColor: ThemeService.mainBackground,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -159,17 +160,27 @@ class _NoteEditviewState extends State<NoteEditview> {
         onPressed: () async {
           if (header.text.isEmpty) {
             HelperService.alertDialog(
-              title: Center(child: Text("foo")),
-              content: Center(child: Text("bar")),
-              color: Colors.red,
-              buttons: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("baz"),
+              content: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16.0),
+                  border: Border.all(color: Colors.red, width: 4.0),
+                  color: ThemeService.mainBackground,
                 ),
-              ],
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppBar(automaticallyImplyLeading: false, title: Text("Caution"), backgroundColor: Colors.transparent),
+                    Text("Header must be filled in!\n"),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Ok"),
+                    ),
+                  ],
+                ),
+              ),
+              color: Colors.transparent,
             );
           } else {
             await viewModel.completeNote();

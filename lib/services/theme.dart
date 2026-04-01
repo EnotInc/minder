@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ThemeService {
-  static const Color mainBackground = Color(0xff2d2d2d);
+  //static const Color mainBackground = Color(0xff2d2d2d);
+  //static const Color authColor = Color(0xff1f1f1f);
+  static const Color mainBackground = Color(0xff0f1117);
+  static const Color authColor = Color(0xff1f2633);
   static const Color secondBackground = Color.fromARGB(255, 35, 35, 35);
-  static const Color authColor = Color(0xff1f1f1f);
 
   static ThemeData defaultTheme = ThemeData(
     splashColor: Colors.transparent,

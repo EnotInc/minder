@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../api_modules/note/note.dart';
 import '../../services/storage.dart';
+import '../../services/theme.dart';
 import 'widgets/add_widget.dart';
 import 'grid_view.dart';
 
@@ -41,6 +42,7 @@ class _HomeViewState extends State<HomeView> {
     }
 
     return Scaffold(
+      backgroundColor: ThemeService.mainBackground,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {

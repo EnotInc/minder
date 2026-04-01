@@ -7,6 +7,7 @@ import '../../../enums/tokens.dart';
 import '../../../services/api.dart';
 import '../../../services/context.dart';
 import '../../../services/fcm.dart';
+import '../../../services/helper.dart';
 import '../../../services/storage.dart';
 
 class RegisterviewModel extends ChangeNotifier {
@@ -39,7 +40,7 @@ class RegisterviewModel extends ChangeNotifier {
         }
       }
     } catch (error) {
-      ApiService().somethingWentWrong(error);
+      HelperService().somethingWentWrong(error);
     }
   }
 }

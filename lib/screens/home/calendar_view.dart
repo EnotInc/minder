@@ -55,6 +55,7 @@ class _CalendarViewState extends State<CalendarView> {
           daysShowed: 1,
           initialDate: DateTime.now(),
           maxPreviousDays: 2,
+          fullDayParam: FullDayParam(fullDayEventsBarVisibility: false),
           daysHeaderParam: DaysHeaderParam(daysHeaderForegroundColor: Colors.white),
           offTimesParam: OffTimesParam(offTimesColor: ThemeService.mainBackground),
           dayParam: DayParam(

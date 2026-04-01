@@ -57,6 +57,11 @@ class _NoteCardState extends State<NoteCard> {
           ),
         ),
         onTap: () {
+          Navigator.of(context).pushNamed('/note_edit', arguments: {'note': widget.note}).then((_) async {
+            await viewModel.fetchNotes();
+          });
+        },
+        onLongPress: () {
           Color changedColor = widget.note.color;
           showModalBottomSheet(
             useSafeArea: true,
@@ -65,7 +70,7 @@ class _NoteCardState extends State<NoteCard> {
             builder: (context) {
               final arr = [
                 AppBar(
-                  title: Text(widget.note.title, style: TextStyle(fontSize: 32)),
+                  title: Text(widget.note.title, style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
                   automaticallyImplyLeading: false,
                   backgroundColor: Colors.transparent,
                 ),
@@ -77,7 +82,7 @@ class _NoteCardState extends State<NoteCard> {
                         await viewModel.fetchNotes();
                       });
                     },
-                    child: Text("Change"),
+                    child: Text("Change", style: TextStyle(fontSize: 20)),
                   ),
                 ),
                 ListTile(
@@ -86,7 +91,7 @@ class _NoteCardState extends State<NoteCard> {
                       Navigator.pop(context);
                       viewModel.askAboutDelete(note: widget.note);
                     },
-                    child: Text("Delete"),
+                    child: Text("Delete", style: TextStyle(fontSize: 20)),
                   ),
                 ),
                 ListTile(
@@ -120,7 +125,7 @@ class _NoteCardState extends State<NoteCard> {
                         ],
                       );
                     },
-                    child: Text("Choose a color"),
+                    child: Text("Choose a color", style: TextStyle(fontSize: 20)),
                   ),
                 ),
               ];

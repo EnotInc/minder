@@ -15,4 +15,19 @@ class HelperService {
       },
     );
   }
+
+  Future<void> somethingWentWrong(Object error) async {
+    HelperService.alertDialog(
+      title: Text("Error"),
+      content: Text("Something went wrong: $error"),
+      buttons: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(ContextService.key.currentContext!).pop();
+          },
+          child: Text("ok"),
+        ),
+      ],
+    );
+  }
 }
