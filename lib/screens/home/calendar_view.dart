@@ -44,57 +44,65 @@ class _CalendarViewState extends State<CalendarView> {
     }
   }
 
+  Future<void> refresh() async {
+    await _loadEvents();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: ThemeService.mainBackground,
         drawerScrimColor: ThemeService.mainBackground,
-        body: EventsPlanner(
-          controller: controller,
-          daysShowed: 1,
-          initialDate: DateTime.now(),
-          maxPreviousDays: 2,
-          fullDayParam: FullDayParam(fullDayEventsBarVisibility: false),
-          daysHeaderParam: DaysHeaderParam(daysHeaderForegroundColor: Colors.white),
-          offTimesParam: OffTimesParam(offTimesColor: ThemeService.mainBackground),
-          dayParam: DayParam(
-            todayColor: ThemeService.secondBackground,
-            dayColor: ThemeService.mainBackground,
-            dayEventBuilder: (event, height, width, heightPerMinute) {
-              bool imortant = false;
-              if (event.data is Note) {
-                final obj = event.data as Note;
-                imortant = obj.isImportant;
-              }
-              return Container(
-                margin: EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: ThemeService.mainBackground,
-                  borderRadius: BorderRadius.circular(2),
-                  border: BoxBorder.all(color: event.color, width: imortant ? 3 : 1),
-                ),
-                child: DefaultDayEvent(
-                  color: ThemeService.mainBackground,
-                  height: height,
-                  width: width,
-                  title: event.title,
-                  description: event.description,
-                  onTap: () {
-                    print('tap');
-                    Navigator.of(context).pushNamed('/note_edit', arguments: {'note': event.data}).then((_) async {
-                      setState(() async {
-                        events = widget.viewModel.events;
-                        controller.updateCalendarData((cd) {
-                          cd.clearAll();
-                          cd.addEvents(events);
+        body: RefreshIndicator(
+          onRefresh: refresh,
+          child: EventsPlanner(
+            controller: controller,
+            daysShowed: 1,
+            initialDate: DateTime.now(),
+            maxPreviousDays: 2,
+            fullDayParam: FullDayParam(fullDayEventsBarVisibility: false),
+            daysHeaderParam: DaysHeaderParam(daysHeaderForegroundColor: Colors.white),
+            offTimesParam: OffTimesParam(offTimesColor: ThemeService.mainBackground),
+            dayParam: DayParam(
+              todayColor: ThemeService.secondBackground,
+              dayColor: ThemeService.mainBackground,
+              dayEventBuilder: (event, height, width, heightPerMinute) {
+                bool imortant = false;
+                if (event.data is Note) {
+                  final obj = event.data as Note;
+                  imortant = obj.isImportant;
+                }
+                return Container(
+                  margin: EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: ThemeService.mainBackground,
+                    borderRadius: BorderRadius.circular(2),
+                    border: BoxBorder.all(color: event.color, width: imortant ? 3 : 1),
+                  ),
+                  child: DefaultDayEvent(
+                    color: ThemeService.mainBackground,
+                    height: height,
+                    width: width,
+                    title: event.title,
+                    description: event.description,
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/note_edit', arguments: {'note': event.data}).then((_) async {
+                        await widget.viewModel.fetchNotes();
+                        setState(() {
+                          events = widget.viewModel.events;
+                          controller.updateCalendarData((cd) {
+                            cd.clearAll();
+                            cd.addEvents(events);
+                          });
                         });
                       });
-                    });
-                  },
-                ),
-              );
-            },
+                    },
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),

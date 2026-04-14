@@ -2,6 +2,21 @@ import 'package:client/services/context.dart';
 import 'package:flutter/material.dart';
 
 class HelperService {
+  static void serverUnabailabe() {
+    HelperService.alertDialog(
+      title: AppBar(title: Text("Error!"), automaticallyImplyLeading: false, backgroundColor: Colors.transparent),
+      content: Text("Server is unavalable\nPlease try again later"),
+      buttons: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(ContextService.key.currentContext!).pop();
+          },
+          child: Text("Ok"),
+        ),
+      ],
+    );
+  }
+
   static void alertDialog({Widget? title, Widget? content, List<Widget>? buttons, Color? color}) {
     if (ContextService.key.currentContext == null) return;
 

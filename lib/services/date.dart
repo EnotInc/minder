@@ -1,4 +1,5 @@
 import 'package:client/services/context.dart';
+import 'package:client/services/helper.dart';
 import 'package:client/services/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -78,7 +79,6 @@ class _DateSettingAlertState extends State<DateSettingAlert> {
               });
             },
           ),
-          //const SizedBox(width: 12),
           TextButton(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -104,28 +104,30 @@ class _DateSettingAlertState extends State<DateSettingAlert> {
               });
             },
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     Text("Repeat daily: "),
-          //     Switch(
-          //       value: _switch,
-          //       onChanged: (value) {
-          //         setState(() {
-          //           _switch = value;
-          //         });
-          //       },
-          //     ),
-          //   ],
-          // ),
           SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextButton(
                 onPressed: () async {
-                  widget.onAdd(widget.note, date, repeat);
-                  Navigator.of(ContextService.key.currentContext!).pop();
+                  final d = DateTime.parse(date.toIso8601String().split("Z").first);
+                  if (d.isBefore(DateTime.now().toUtc())) {
+                    HelperService.alertDialog(
+                      title: AppBar(title: Text("Warning!"), backgroundColor: Colors.transparent, automaticallyImplyLeading: false),
+                      content: Text("Selected date is less then current one.\nSelect different date/time"),
+                      buttons: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Ok"),
+                        ),
+                      ],
+                    );
+                  } else {
+                    widget.onAdd(widget.note, date, repeat);
+                    Navigator.of(ContextService.key.currentContext!).pop();
+                  }
                 },
                 child: const Text("Ok"),
               ),

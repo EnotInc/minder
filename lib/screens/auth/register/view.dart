@@ -150,7 +150,7 @@ class _RegisterViewState extends State<RegisterView> {
           ),
         ),
         bottomNavigationBar: Padding(
-          padding: EdgeInsetsGeometry.symmetric(vertical: 8, horizontal: 0),
+          padding: EdgeInsetsGeometry.all(32),
           child: SizedBox(
             width: double.infinity,
             child: Container(

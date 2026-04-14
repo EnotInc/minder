@@ -108,7 +108,7 @@ class _LoginViewState extends State<LoginView> {
           ),
         ),
         bottomNavigationBar: Padding(
-          padding: EdgeInsetsGeometry.symmetric(vertical: 8, horizontal: 0),
+          padding: EdgeInsetsGeometry.all(32),
           child: SizedBox(
             width: double.infinity,
             child: Container(

@@ -15,6 +15,7 @@ class GridView extends StatelessWidget {
       child: RefreshIndicator(
         onRefresh: viewModel.fetchNotes,
         child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
           child: StaggeredGrid.count(
             crossAxisCount: 2,
             children: List.generate(viewModel.notes.length, (index) {

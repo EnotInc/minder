@@ -16,10 +16,8 @@ void main() async {
 
   String initialRoute = "/login";
 
-  final response = await ApiService().get(path: "ping");
-  if (response.toString() == "pong" && await StorageService().isLoggedIn()) {
+  if (await ApiService().isAlive() && await StorageService().isLoggedIn()) {
     initialRoute = "/home";
-    //Navigator.pushReplacementNamed(ContextService.key.currentContext!, '/home');
   }
 
   runApp(Minder(initialRoute: initialRoute));

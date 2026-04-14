@@ -17,6 +17,7 @@ class HomeViewModel with ChangeNotifier {
   List<Event> _events = [];
 
   List<Note> get notes => _notes;
+  bool isLoading = false;
 
   set events(List<Event> data) {
     _events = data;
@@ -28,6 +29,7 @@ class HomeViewModel with ChangeNotifier {
   }
 
   Future<void> fetchNotes() async {
+    isLoading = true;
     try {
       final Response<dynamic>? response = await ApiService().get(path: "notes");
 
@@ -39,6 +41,7 @@ class HomeViewModel with ChangeNotifier {
             _notes = model.data!.notes ?? [];
             _events = notesAsEvents();
             notifyListeners();
+            isLoading = false;
             return;
           }
         }
@@ -48,6 +51,7 @@ class HomeViewModel with ChangeNotifier {
     } catch (error) {
       HelperService().somethingWentWrong(error);
     }
+    isLoading = false;
   }
 
   void changeColor({required Color newColor, required Note note}) async {
@@ -121,9 +125,10 @@ class HomeViewModel with ChangeNotifier {
 
   Future<void> updateDate(Note note, DateTime date, bool repeat) async {
     try {
+      final dateWithoutTimezone = date.toIso8601String().split("Z").first;
       Map<String, dynamic> body = {
         "note_id": note.id,
-        "notification": {"notification_id": note.notification!.id, "date": date.toIso8601String(), "repeat": repeat},
+        "notification": {"notification_id": note.notification!.id, "date": dateWithoutTimezone, "repeat": repeat},
       };
 
       final Response<dynamic>? response = await ApiService().post(path: "notes/notify/edit", body: body);

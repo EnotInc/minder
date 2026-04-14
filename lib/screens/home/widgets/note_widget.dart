@@ -38,17 +38,17 @@ class _NoteCardState extends State<NoteCard> {
                 centerTitle: true,
                 title: Text(widget.note.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 actions: [
-                  widget.note.notification != null
-                      ? IconButton(
+                  widget.note.notification == null
+                      ? SizedBox()
+                      : IconButton(
                           onPressed: () {
                             HelperService.alertDialog(
                               content: DateService.dateSeting(note: widget.note, onAdd: viewModel.updateDate, onDelete: viewModel.deleteNotification),
                               color: Colors.transparent,
                             );
                           },
-                          icon: Icon(Icons.notifications_active_outlined),
-                        )
-                      : SizedBox(),
+                          icon: Icon(widget.note.notification!.isSent ? Icons.done : Icons.notifications_active_outlined),
+                        ),
                 ],
               ),
               const SizedBox(height: 8),

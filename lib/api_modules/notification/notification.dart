@@ -22,7 +22,10 @@ class Notification {
   // @JsonKey(name: "notification_type")
   // String notificationType;
 
-  Notification({required this.id, required this.remindAt});
+  @JsonKey(name: "is_sent")
+  bool isSent;
+
+  Notification({required this.id, required this.remindAt, required this.isSent});
 
   factory Notification.fromJson(Map<String, dynamic> json) => _$NotificationFromJson(json);
   Map<String, dynamic> toJson() => _$NotificationToJson(this);

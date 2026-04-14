@@ -9,45 +9,66 @@ import '../api_modules/body/body.dart';
 import './context.dart';
 import './helper.dart';
 
+void printDebugInfo({required String url, String? req, required String res}) {
+  if (kDebugMode) {
+    print(url);
+    print(req ?? "{}");
+    print(res);
+  }
+}
+
 class ApiService {
   static final url = "http://localhost:3000/apiv1/";
 
   static Dio dio = Dio();
+  Future<bool> isAlive() async {
+    try {
+      final res = await dio.get("${url}pong", options: Options(sendTimeout: Duration(seconds: 15)));
+      return res.statusCode == 200 && res.toString() == "pong";
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> logout() async {
+    Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+    StorageService().emptyStorage();
+  }
 
   Future<dynamic> get({required String path}) async {
     try {
-      if (kDebugMode) {
-        debugPrint("$url$path");
-      }
-
-      final token = await StorageService().getToken(Token.access.name);
+      final token = await StorageService().read(Token.access.name);
       Map<String, dynamic> headers = {'Authorization': 'Bearer $token'};
       if (path.contains('auth')) {
         headers = {};
       }
 
       final responce = await dio.get("$url$path", options: Options(headers: headers));
+      printDebugInfo(url: url + path, req: null, res: responce.toString());
       return responce;
     } on DioException catch (error) {
+      if (!await isAlive()) {
+        HelperService.serverUnabailabe();
+        return null;
+      }
       if (error.response!.statusCode == 401) {
         return await refreshToken(path: path, method: "GET");
       }
-
-      Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-      StorageService().emptyStorage();
-    } catch (error) {
       HelperService().somethingWentWrong(error);
+      ApiService().logout();
+    } catch (error) {
+      if (await isAlive()) {
+        HelperService().somethingWentWrong(error);
+      } else {
+        HelperService.serverUnabailabe();
+      }
+      return null;
     }
   }
 
   Future<dynamic> post({required String path, required Map<String, dynamic> body}) async {
     try {
-      if (kDebugMode) {
-        debugPrint("$url$path");
-        debugPrint(body.toString());
-      }
-
-      final String token = await StorageService().getToken(Token.access.name);
+      final String token = await StorageService().read(Token.access.name);
       Map<String, dynamic> headers = {'Authorization': 'Bearer $token'};
       if (path.contains('auth')) {
         headers = {};
@@ -57,27 +78,31 @@ class ApiService {
         data: body,
         options: Options(headers: headers),
       );
+      printDebugInfo(url: url + path, req: body.toString(), res: responce.toString());
       return responce;
     } on DioException catch (error) {
-      print(error);
+      if (!await isAlive()) {
+        HelperService.serverUnabailabe();
+        return null;
+      }
       if (error.response!.statusCode == 401) {
         return await refreshToken(path: path, body: body, method: "POST");
       }
-      Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-      StorageService().emptyStorage();
-    } catch (error) {
       HelperService().somethingWentWrong(error);
+      ApiService().logout();
+    } catch (error) {
+      if (await isAlive()) {
+        HelperService().somethingWentWrong(error);
+      } else {
+        HelperService.serverUnabailabe();
+      }
+      return null;
     }
   }
 
   Future<dynamic> delete({required String path, required Map<String, dynamic> body}) async {
     try {
-      if (kDebugMode) {
-        debugPrint("$url$path");
-        debugPrint(body.toString());
-      }
-
-      final token = await StorageService().getToken(Token.access.name);
+      final token = await StorageService().read(Token.access.name);
       Map<String, dynamic> headers = {'Authorization': 'Bearer $token'};
 
       final responce = await dio.delete(
@@ -86,21 +111,31 @@ class ApiService {
         options: Options(headers: headers),
       );
 
+      printDebugInfo(url: url + path, req: body.toString(), res: responce.toString());
       return responce;
     } on DioException catch (error) {
+      if (!await isAlive()) {
+        HelperService.serverUnabailabe();
+        return null;
+      }
       if (error.response!.statusCode == 401) {
         return await refreshToken(path: path, body: body, method: "DELETE");
       }
-      Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-      StorageService().emptyStorage();
-    } catch (error) {
       HelperService().somethingWentWrong(error);
+      ApiService().logout();
+    } catch (error) {
+      if (await isAlive()) {
+        HelperService().somethingWentWrong(error);
+      } else {
+        HelperService.serverUnabailabe();
+      }
+      return null;
     }
   }
 
   Future<dynamic> refreshToken({required String path, required String method, Map<String, dynamic>? body}) async {
     try {
-      final refreshOld = await StorageService().getToken(Token.refresh.name);
+      final refreshOld = await StorageService().read(Token.refresh.name);
       final response = await dio.post("${url}auth/refresh", data: {"refresh_token": refreshOld});
 
       String access;
@@ -111,8 +146,8 @@ class ApiService {
         access = model.data!.accesToken!;
         refresh = model.data!.refreshToken!;
 
-        StorageService().saveToken(type: Token.access.name, token: access);
-        StorageService().saveToken(type: Token.refresh.name, token: refresh);
+        StorageService().write(key: Token.access.name, value: access);
+        StorageService().write(key: Token.refresh.name, value: refresh);
       } else {
         throw ("Unable to get login");
       }
@@ -135,9 +170,9 @@ class ApiService {
           );
       }
     } catch (error) {
-      Navigator.of(ContextService.key.currentContext!).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-      StorageService().emptyStorage();
+      ApiService().logout();
       HelperService().somethingWentWrong(error);
+      return null;
     }
   }
 }

@@ -159,7 +159,7 @@ class NoteEditViewModel extends ChangeNotifier {
   }
 
   void addDate(Note note, DateTime date, bool repeat) async {
-    note.notification = Notification(id: -1, remindAt: date);
+    note.notification = Notification(id: -1, remindAt: date, isSent: false);
     try {
       if (!isNew && note.id != -1) {
         Map<String, dynamic> notify = {"date": note.notification?.remindAt.toIso8601String(), "repeat": false};
@@ -184,9 +184,10 @@ class NoteEditViewModel extends ChangeNotifier {
 
   Future<void> editDate(Note note, DateTime date, bool repeat) async {
     try {
+      final dateWithoutTimezone = date.toIso8601String().split("Z").first;
       Map<String, dynamic> body = {
         "note_id": note.id,
-        "notification": {"notificaton": note.notification!.id, "date": date.toIso8601String(), "repeat": repeat},
+        "notification": {"notification_id": note.notification!.id, "date": dateWithoutTimezone, "repeat": repeat},
       };
 
       final Response<dynamic>? response = await ApiService().post(path: "notes/notify/edit", body: body);
@@ -196,6 +197,8 @@ class NoteEditViewModel extends ChangeNotifier {
         if (!model.success) {
           throw ("Unable to change the date: ${model.message ?? "unknown error"}");
         }
+
+        note.notification!.remindAt = date;
       }
       notifyListeners();
     } catch (error) {

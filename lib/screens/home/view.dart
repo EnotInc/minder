@@ -57,6 +57,11 @@ class _HomeViewState extends State<HomeView> {
           },
           icon: getIcon(curView),
         ),
+        // title: SearchBar(
+        //   onChanged: (value) {
+        //     // TODO: implement search bar
+        //   },
+        // ),
         actions: [
           IconButton(
             onPressed: () async {
@@ -75,7 +80,9 @@ class _HomeViewState extends State<HomeView> {
         ],
         backgroundColor: Colors.transparent,
       ),
-      body: (viewModel.notes.isEmpty)
+      body: viewModel.isLoading
+          ? Center(child: CircularProgressIndicator())
+          : (viewModel.notes.isEmpty)
           ? Column(
               children: [
                 Expanded(child: SizedBox()),

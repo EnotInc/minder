@@ -28,8 +28,8 @@ class LoginViewModel extends ChangeNotifier {
             if (model.data!.accesToken == null || model.data!.refreshToken == null) {
               throw ("unable to login");
             }
-            StorageService().saveToken(type: Token.access.name, token: model.data!.accesToken!);
-            StorageService().saveToken(type: Token.refresh.name, token: model.data!.refreshToken!);
+            StorageService().write(key: Token.access.name, value: model.data!.accesToken!);
+            StorageService().write(key: Token.refresh.name, value: model.data!.refreshToken!);
             Navigator.pushReplacementNamed(ContextService.key.currentContext!, '/home');
           } else {
             throw ("unable to login");
