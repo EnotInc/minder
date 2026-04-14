@@ -175,7 +175,6 @@ class NoteEditViewModel extends ChangeNotifier {
           }
         }
       }
-      //
     } catch (error) {
       HelperService().somethingWentWrong(error);
     }

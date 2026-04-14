@@ -57,11 +57,6 @@ class _HomeViewState extends State<HomeView> {
           },
           icon: getIcon(curView),
         ),
-        // title: SearchBar(
-        //   onChanged: (value) {
-        //     // TODO: implement search bar
-        //   },
-        // ),
         actions: [
           IconButton(
             onPressed: () async {
@@ -71,12 +66,6 @@ class _HomeViewState extends State<HomeView> {
             },
             icon: Icon(Icons.exit_to_app_rounded),
           ),
-          //  IconButton(
-          //     onPressed: () async {
-          //       Navigator.of(context).pushNamed('/profile');
-          //     },
-          //     icon: Icon(Icons.person),
-          //   ),
         ],
         backgroundColor: Colors.transparent,
       ),
@@ -86,7 +75,7 @@ class _HomeViewState extends State<HomeView> {
           ? Column(
               children: [
                 Expanded(child: SizedBox()),
-                Center(child: Text("Create your firt note!", style: TextStyle(fontSize: 32))),
+                Center(child: Text("Create your first note!", style: TextStyle(fontSize: 32))),
                 Expanded(child: SizedBox()),
                 Center(child: AddNoteButton(viewModel: viewModel)),
                 Expanded(child: SizedBox()),

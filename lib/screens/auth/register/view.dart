@@ -69,6 +69,7 @@ class _RegisterViewState extends State<RegisterView> {
                               validator: (value) {
                                 final v = value?.trim() ?? '';
                                 if (v.isEmpty) return 'Enter email';
+                                if (!v.contains("@")) return "Wrong email format";
                                 if (v.length < loginLen) return 'Login must be bigger than $loginLen symbols';
                                 viewModel.email = email.text;
                                 return null;

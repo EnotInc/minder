@@ -66,7 +66,7 @@ class _NoteEditviewState extends State<NoteEditview> {
               HelperService.alertDialog(
                 content: DateService.dateSeting(
                   note: viewModel.note,
-                  onAdd: viewModel.note.notification == null ? viewModel.addDate : viewModel.editDate,
+                  onAdd: (viewModel.note.notification == null || viewModel.note.notification!.id == -1) ? viewModel.addDate : viewModel.editDate,
                   onDelete: viewModel.deleteNotification,
                 ),
                 color: Colors.transparent,
