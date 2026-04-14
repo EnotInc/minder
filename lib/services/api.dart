@@ -23,7 +23,7 @@ class ApiService {
   static Dio dio = Dio();
   Future<bool> isAlive() async {
     try {
-      final res = await dio.get("${url}pong", options: Options(sendTimeout: Duration(seconds: 15)));
+      final res = await dio.get("${url}ping", options: Options(sendTimeout: Duration(seconds: 15)));
       return res.statusCode == 200 && res.toString() == "pong";
     } catch (_) {
       return false;
