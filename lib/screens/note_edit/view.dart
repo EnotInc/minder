@@ -136,18 +136,20 @@ class _NoteEditviewState extends State<NoteEditview> {
                   ),
                 ),
                 Flexible(
-                  child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    child: TextField(
-                      controller: content,
-                      maxLines: null,
-                      minLines: 64,
-                      style: TextStyle(fontSize: 20),
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(hintText: "tell me more", border: InputBorder.none, contentPadding: EdgeInsets.all(8)),
-                      onChanged: (value) {
-                        viewModel.note.description = content.text;
-                      },
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints.expand(),
+                    child: Scrollbar(
+                      child: TextField(
+                        controller: content,
+                        maxLines: null,
+                        minLines: 64,
+                        style: TextStyle(fontSize: 20),
+                        keyboardType: TextInputType.multiline,
+                        decoration: InputDecoration(hintText: "tell me more", border: InputBorder.none, contentPadding: EdgeInsets.all(8)),
+                        onChanged: (value) {
+                          viewModel.note.description = content.text;
+                        },
+                      ),
                     ),
                   ),
                 ),

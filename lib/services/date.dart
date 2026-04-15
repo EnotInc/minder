@@ -89,7 +89,7 @@ class _DateSettingAlertState extends State<DateSettingAlert> {
               ],
             ),
             onPressed: () async {
-              final newDate = await showDatePicker(context: context, firstDate: date, lastDate: DateTime(2036), initialDate: DateTime.now()) ?? DateTime(3333, 11, 11);
+              final newDate = await showDatePicker(context: context, firstDate: DateTime.now(), lastDate: DateTime(2036), initialDate: date) ?? DateTime(3333, 11, 11);
               setState(() {
                 date = date.copyWith(
                   year: newDate.year,

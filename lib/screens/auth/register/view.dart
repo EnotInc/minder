@@ -55,6 +55,7 @@ class _RegisterViewState extends State<RegisterView> {
                               validator: (value) {
                                 final v = value?.trim() ?? '';
                                 if (v.isEmpty) return 'Enter login';
+                                if (v.contains(RegExp(r"[^a-zA-Z0-9_]"))) return "Cannot contain sybols, only letters, numbers and '_'";
                                 if (v.length < loginLen) return 'Login must be bigger than $loginLen symbols';
                                 viewModel.login = login.text;
                                 return null;
@@ -70,6 +71,7 @@ class _RegisterViewState extends State<RegisterView> {
                                 final v = value?.trim() ?? '';
                                 if (v.isEmpty) return 'Enter email';
                                 if (!v.contains("@")) return "Wrong email format";
+                                if (v.contains(RegExp(r"[^a-zA-Z0-9_@]"))) return "Cannot contain sybols, only letters, numbers and symbols '_' and '@'";
                                 if (v.length < loginLen) return 'Login must be bigger than $loginLen symbols';
                                 viewModel.email = email.text;
                                 return null;
@@ -95,6 +97,7 @@ class _RegisterViewState extends State<RegisterView> {
                               validator: (value) {
                                 final v = value?.trim() ?? '';
                                 if (v.isEmpty) return 'Enter password';
+                                if (v.contains(RegExp(r"[^a-zA-Z0-9_]"))) return "Cannot contain sybols, only letters, numbers and '_'";
                                 if (v.length < passwordLen) return 'Password must be bigger than $passwordLen symbols';
                                 return null;
                               },
@@ -119,8 +122,9 @@ class _RegisterViewState extends State<RegisterView> {
                               validator: (value) {
                                 final v = value?.trim() ?? '';
                                 if (v.isEmpty) return 'Enter password';
-                                if (v.length < passwordLen) return 'Password must be bigger than $passwordLen symbols';
                                 if (password.text != repeat.text) return 'Passwords must be the same';
+                                if (v.contains(RegExp(r"[^a-zA-Z0-9_]"))) return "Cannot contain sybols, only letters, numbers and '_'";
+                                if (v.length < passwordLen) return 'Password must be bigger than $passwordLen symbols';
                                 viewModel.passoword = repeat.text;
                                 return null;
                               },

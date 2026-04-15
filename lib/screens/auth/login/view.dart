@@ -52,6 +52,7 @@ class _LoginViewState extends State<LoginView> {
                               validator: (value) {
                                 final v = value?.trim() ?? '';
                                 if (v.isEmpty) return 'Enter login or email';
+                                if (v.contains(RegExp(r"[^a-zA-Z0-9_@]"))) return "Cannot contain sybols, only letters, numbers and symbols '_' and '@'";
                                 if (v.length < loginLen) return 'Login must me bigger than $loginLen symbols';
                                 viewModel.email = login.text;
                                 return null;
@@ -77,6 +78,7 @@ class _LoginViewState extends State<LoginView> {
                               validator: (value) {
                                 final v = value?.trim() ?? '';
                                 if (v.isEmpty) return 'Enter password';
+                                if (v.contains(RegExp(r"[^a-zA-Z0-9_]"))) return "Cannot contain sybols, only letters, numbers and '_'";
                                 if (v.length < passwordLen) return 'Password must be bigger than $passwordLen symbols';
                                 viewModel.passoword = password.text;
                                 return null;
