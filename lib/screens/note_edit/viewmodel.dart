@@ -1,4 +1,5 @@
 import 'package:client/api_modules/note/note.dart';
+import 'package:client/enums/category.dart';
 import 'package:client/services/context.dart';
 import 'package:client/services/helper.dart';
 import 'package:dio/dio.dart';
@@ -110,7 +111,7 @@ class NoteEditViewModel extends ChangeNotifier {
         notify = {};
       }
       Map<String, dynamic> body = {
-        "note": {"header": note.title, "text": note.description, "color": "#$color", "images": "", "is_important": note.isImportant},
+        "note": {"header": note.title, "text": note.description, "color": "#$color", "images": "", "is_important": note.isImportant, "category_id": note.categoryId},
         "notification": note.notification != null ? notify : null,
       };
       final Response<dynamic>? response = await ApiService().post(path: "notes/add", body: body);
@@ -138,7 +139,15 @@ class NoteEditViewModel extends ChangeNotifier {
         notify = {};
       }
       Map<String, dynamic> body = {
-        "note": {"note_id": note.id, "header": note.title, "text": note.description, "color": "#$color", "images": "", "is_important": note.isImportant},
+        "note": {
+          "note_id": note.id,
+          "header": note.title,
+          "text": note.description,
+          "color": "#$color",
+          "images": "",
+          "is_important": note.isImportant,
+          "category_id": note.categoryId,
+        },
         "notification": note.notification != null ? notify : null,
       };
       final Response<dynamic>? response = await ApiService().post(path: "notes/edit", body: body);
@@ -155,6 +164,33 @@ class NoteEditViewModel extends ChangeNotifier {
       throw ("unknown error");
     } catch (error) {
       HelperService().somethingWentWrong(error);
+    }
+  }
+
+  void changeCategory(Categories type) {
+    switch (type) {
+      case Categories.none:
+        note.categoryId = null;
+      case Categories.work:
+        note.categoryId = 1;
+      case Categories.study:
+        note.categoryId = 2;
+      case Categories.health:
+        note.categoryId = 3;
+      case Categories.sport:
+        note.categoryId = 4;
+      case Categories.holidays:
+        note.categoryId = 5;
+      case Categories.travel:
+        note.categoryId = 6;
+    }
+  }
+
+  Icon categoryIcon() {
+    if (note.categoryId == null) {
+      return Icon(Icons.category_outlined);
+    } else {
+      return cIcons[note.categoryId!];
     }
   }
 

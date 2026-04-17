@@ -1,3 +1,4 @@
+import 'package:client/enums/category.dart';
 import 'package:client/services/date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -22,7 +23,7 @@ class _NoteCardState extends State<NoteCard> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeViewModel>();
     return Container(
-      margin: EdgeInsets.all(8),
+      margin: EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: ThemeService.mainBackground,
         borderRadius: BorderRadius.circular(8),
@@ -32,27 +33,36 @@ class _NoteCardState extends State<NoteCard> {
         child: Padding(
           padding: EdgeInsetsGeometry.all(12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              AppBar(
-                centerTitle: true,
-                title: Text(widget.note.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                actions: [
-                  widget.note.notification == null
-                      ? SizedBox()
-                      : IconButton(
-                          onPressed: () {
-                            HelperService.alertDialog(
-                              content: DateService.dateSeting(note: widget.note, onAdd: viewModel.updateDate, onDelete: viewModel.deleteNotification),
-                              color: Colors.transparent,
-                            );
-                          },
-                          icon: Icon(widget.note.notification!.isSent ? Icons.done : Icons.notifications_active_outlined),
+              (widget.note.categoryId == null && widget.note.notification == null)
+                  ? SizedBox()
+                  : Row(
+                      children: [
+                        widget.note.categoryId == null ? SizedBox() : cIcons[widget.note.categoryId!],
+                        Spacer(),
+                        widget.note.notification == null
+                            ? SizedBox()
+                            : GestureDetector(
+                                onTap: () => HelperService.alertDialog(
+                                  content: DateService.dateSeting(note: widget.note, onAdd: viewModel.updateDate, onDelete: viewModel.deleteNotification),
+                                  color: Colors.transparent,
+                                ),
+                                child: Icon(widget.note.notification!.isSent ? Icons.done : Icons.notifications_active_outlined),
+                              ),
+                      ],
+                    ),
+              Text(widget.note.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              (widget.note.description == null)
+                  ? SizedBox()
+                  : Column(
+                      children: [
+                        Row(
+                          children: [Expanded(child: Container(height: 1, color: widget.note.color))],
                         ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(widget.note.description ?? "", overflow: TextOverflow.ellipsis, maxLines: 10, style: TextStyle(fontSize: 16)),
+                        const SizedBox(height: 8),
+                        Text(widget.note.description ?? "", overflow: TextOverflow.ellipsis, maxLines: 10, style: TextStyle(fontSize: 12)),
+                      ],
+                    ),
             ],
           ),
         ),

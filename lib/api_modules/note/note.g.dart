@@ -12,6 +12,7 @@ Note _$NoteFromJson(Map<String, dynamic> json) => Note(
   description: json['description'] as String?,
   color: _colorFromJson(json['color'] as String?),
   isImportant: json['is_important'] as bool,
+  categoryId: (json['category_id'] as num?)?.toInt(),
   notification: json['notification'] == null
       ? null
       : Notification.fromJson(json['notification'] as Map<String, dynamic>),
@@ -24,4 +25,5 @@ Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
   'color': _colorToJson(instance.color),
   'is_important': instance.isImportant,
   'notification': instance.notification,
+  'category_id': instance.categoryId,
 };

@@ -34,9 +34,11 @@ class Note {
 
   @JsonKey(name: "notification")
   Notification? notification;
+
+  @JsonKey(name: "category_id")
+  int? categoryId;
   // DateTime? eventDate;
   // String? endDate;
-  // String? categoryId;
   // String? location;
   // bool? isPrivate;
   // bool? isRecurring;
@@ -54,6 +56,7 @@ class Note {
     required this.description,
     required this.color,
     required this.isImportant,
+    required this.categoryId,
     this.notification,
     // this.eventDate,
     // this.endDate,

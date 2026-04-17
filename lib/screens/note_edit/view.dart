@@ -1,3 +1,4 @@
+import 'package:client/enums/category.dart';
 import 'package:client/services/date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -27,7 +28,7 @@ class _NoteEditviewState extends State<NoteEditview> {
   void initState() {
     super.initState();
     final viewModel = context.read<NoteEditViewModel>();
-    Note note = widget.note ?? Note(id: -1, title: "", description: "", color: ColorService.getRandomPastelColor(), isImportant: false);
+    Note note = widget.note ?? Note(id: -1, title: "", description: "", color: ColorService.getRandomPastelColor(), isImportant: false, categoryId: null);
     viewModel.note = note;
     viewModel.isNew = widget.note == null;
   }
@@ -49,6 +50,44 @@ class _NoteEditviewState extends State<NoteEditview> {
         ),
         iconTheme: IconThemeData(size: 32.0),
         actions: [
+          PopupMenuButton<Categories>(
+            icon: viewModel.categoryIcon(),
+            onSelected: (type) {
+              setState(() {
+                viewModel.changeCategory(type);
+              });
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: Categories.none,
+                child: Row(children: [Icon(Icons.remove), const Text(' None')]),
+              ),
+              PopupMenuItem(
+                value: Categories.work,
+                child: Row(children: [cIcons[1], Text(' Work')]),
+              ),
+              PopupMenuItem(
+                value: Categories.study,
+                child: Row(children: [cIcons[2], Text(' Study')]),
+              ),
+              PopupMenuItem(
+                value: Categories.health,
+                child: Row(children: [cIcons[3], Text(' Health')]),
+              ),
+              PopupMenuItem(
+                value: Categories.sport,
+                child: Row(children: [cIcons[4], Text(' Sprorts')]),
+              ),
+              PopupMenuItem(
+                value: Categories.holidays,
+                child: Row(children: [cIcons[5], Text(' Holidays')]),
+              ),
+              PopupMenuItem(
+                value: Categories.travel,
+                child: Row(children: [cIcons[6], Text(' Travel')]),
+              ),
+            ],
+          ),
           IconButton(
             onPressed: () {
               viewModel.changeImportant();
@@ -134,6 +173,16 @@ class _NoteEditviewState extends State<NoteEditview> {
                       },
                     ),
                   ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsetsGeometry.only(left: 8, right: 8),
+                        child: Container(height: 1.0, color: viewModel.note.color),
+                      ),
+                    ),
+                  ],
                 ),
                 Flexible(
                   child: ConstrainedBox(
